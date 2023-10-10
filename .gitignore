@@ -1,3 +1,9 @@
+# ESP-IDF Config
+/firmware/**/sdkconfig
+
+# ESP-IDF Toolchains
+/toolchains/*
+
 # KiCAD Backups
 /eda/*.bak
 /eda/**/*-backups/*.zip

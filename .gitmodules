@@ -1,0 +1,5 @@
+[submodule "esp-idf"]
+	ignore = dirty
+	path = esp-idf
+	shallow = true
+	url = ../../espressif/esp-idf.git
