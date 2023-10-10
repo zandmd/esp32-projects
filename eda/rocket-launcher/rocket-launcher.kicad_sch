@@ -1,0 +1,73 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  (uuid 9d5776c6-fb3f-4b4d-ab0f-e42ed26fc4af)
+
+  (paper "A5")
+
+  (lib_symbols
+  )
+
+
+  (wire (pts (xy 86.36 60.96) (xy 111.76 60.96))
+    (stroke (width 0) (type default))
+    (uuid 9cf87d81-6478-4792-87d0-f3dea9b4f055)
+  )
+  (wire (pts (xy 86.36 66.04) (xy 111.76 66.04))
+    (stroke (width 0) (type default))
+    (uuid ba778974-0cce-4dd0-9d9a-5111003cca24)
+  )
+
+  (sheet (at 60.96 50.8) (size 25.4 25.4) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 2a3b21cc-6254-438d-b691-d4fcc661afd0)
+    (property "Sheetname" "Pad" (at 60.96 50.0884 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "pad.kicad_sch" (at 60.96 76.7846 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (pin "BAT-" output (at 86.36 66.04 0)
+      (effects (font (size 1.27 1.27)) (justify right))
+      (uuid 633995d1-696e-491d-aac9-ba9717333d3d)
+    )
+    (pin "BAT+" output (at 86.36 60.96 0)
+      (effects (font (size 1.27 1.27)) (justify right))
+      (uuid 79dc4711-ad72-4c1e-abcc-9b17e0dea38b)
+    )
+    (instances
+      (project "rocket-launcher"
+        (path "/9d5776c6-fb3f-4b4d-ab0f-e42ed26fc4af" (page "2"))
+      )
+    )
+  )
+
+  (sheet (at 111.76 50.8) (size 25.4 25.4) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 43693304-8e7a-4719-b689-268f000fcfa0)
+    (property "Sheetname" "LCO" (at 111.76 50.0884 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "lco.kicad_sch" (at 111.76 76.7846 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (pin "BAT+" input (at 111.76 60.96 180)
+      (effects (font (size 1.27 1.27)) (justify left))
+      (uuid 229d129c-bdf9-473e-9d6e-ef72060ec693)
+    )
+    (pin "BAT-" input (at 111.76 66.04 180)
+      (effects (font (size 1.27 1.27)) (justify left))
+      (uuid d51bc81b-4efc-4a41-adf0-245358b8006e)
+    )
+    (instances
+      (project "rocket-launcher"
+        (path "/9d5776c6-fb3f-4b4d-ab0f-e42ed26fc4af" (page "3"))
+      )
+    )
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

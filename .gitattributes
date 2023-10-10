@@ -1,0 +1,19 @@
+.gitattributes  text eol=lf  diff        merge=text    whitespace
+.gitignore      text eol=lf  diff        merge=text    whitespace
+*.go            text eol=lf  diff=golang merge=text    whitespace
+*.kicad_mod     text eol=lf  diff        merge=text    whitespace
+*.kicad_pcb     text eol=lf  diff        merge=text    whitespace
+*.kicad_prl     text eol=lf  diff        merge=text    whitespace
+*.kicad_pro     text eol=lf  diff        merge=text    whitespace
+*.kicad_sch     text eol=lf  diff        merge=text    whitespace
+*.kicad_sym     text eol=lf  diff        merge=text    whitespace
+*.lib           text eol=lf  diff        merge=binary -whitespace
+*.step          text eol=lf  diff        merge=binary -whitespace
+*.STEP          text eol=lf  diff        merge=binary -whitespace
+*.stp           text eol=lf  diff        merge=binary -whitespace
+*.STP           text eol=lf  diff        merge=binary -whitespace
+*.xml           text eol=lf  diff        merge=text    whitespace
+*.xsd           text eol=lf  diff        merge=text    whitespace
+*.zip          -text        -diff        merge=binary -whitespace
+go.mod          text eol=lf  diff        merge=text    whitespace
+go.work         text eol=lf  diff        merge=text    whitespace

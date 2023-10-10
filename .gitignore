@@ -1,0 +1,29 @@
+# KiCAD Backups
+/eda/*.bak
+/eda/**/*-backups/*.zip
+
+# KiCAD Caches
+/eda/**/*-cache
+
+# KiCAD Exported Models
+/eda/**/*.step
+!/eda/3d/*.step
+/eda/**/*.pdf
+
+# KiCAD Lock Files
+/eda/**/~*.lck
+
+# KiCAD Manufacturing Files
+/eda/**/*.drl
+/eda/**/*.g2
+/eda/**/*.g3
+/eda/**/*.gbl
+/eda/**/*.gbo
+/eda/**/*.gbp
+/eda/**/*.gbr
+/eda/**/*.gbs
+/eda/**/*.gm1
+/eda/**/*.gtl
+/eda/**/*.gto
+/eda/**/*.gtp
+/eda/**/*.gts

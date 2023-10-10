@@ -1,0 +1,23 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  (uuid 5a7503ea-4082-400f-a002-097419085675)
+
+  (paper "A5")
+
+  (lib_symbols
+  )
+
+
+  (hierarchical_label "GND" (shape input) (at 101.6 66.04 0) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify left))
+    (uuid 139ab03f-e3bc-41a7-aad3-4e43bdf3bc9c)
+  )
+  (hierarchical_label "+5V" (shape input) (at 101.6 60.96 0) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify left))
+    (uuid be4f5637-b6c3-42ec-bc8e-25e44d9e06cb)
+  )
+  (hierarchical_label "LED" (shape input) (at 101.6 63.5 0) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify left))
+    (uuid f549c428-a514-4e86-9c26-341ba3ea51d6)
+  )
+)

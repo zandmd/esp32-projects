@@ -1,0 +1,64 @@
+(footprint "PASSIVE-POL-LED-5.7MM" (version 20221018) (generator pcbnew)
+  (layer "F.Cu")
+  (attr through_hole)
+  (private_layers "Dwgs.User")
+  (fp_text reference "REF**" (at 0 0 unlocked) (layer "User.1")
+      (effects (font (size 0.8 0.8) (thickness 0.1)))
+    (tstamp d0457bcb-716c-4e32-bfab-24e9ca31d350)
+  )
+  (fp_text value "PASSIVE-POL-LED-5.7MM" (at 0 0 unlocked) (layer "User.2")
+      (effects (font (size 0.2 0.2) (thickness 0.05)))
+    (tstamp bc21527a-c5c1-40f0-aeca-d85e573262c6)
+  )
+  (fp_poly
+    (pts
+      (arc (start -1.27 -1) (mid -0.27 0) (end -1.27 1))
+    )
+
+    (stroke (width 0) (type solid)) (fill solid) (layer "F.Cu") (tstamp b3eea8cf-300f-48cd-8fed-8c796bd48633))
+  (fp_poly
+    (pts
+      (arc (start -1.27 -1) (mid -0.27 0) (end -1.27 1))
+    )
+
+    (stroke (width 0) (type solid)) (fill solid) (layer "B.Cu") (tstamp c30259c6-0356-4052-a45d-e329b817e8c8))
+  (fp_circle (center 0 0) (end 2.85 0)
+    (stroke (width 0.1) (type default)) (fill none) (layer "F.SilkS") (tstamp 1098b33f-33af-43bf-a0ad-2a2fcfb73fb3))
+  (fp_poly
+    (pts
+      (arc (start -2.285999 -1.651) (mid -2.819857 0) (end -2.285999 1.651))
+    )
+
+    (stroke (width 0.1) (type solid)) (fill solid) (layer "F.SilkS") (tstamp 1757e8ef-7865-4665-8750-af16187a74ce))
+  (fp_poly
+    (pts
+      (arc (start -1.27 -1) (mid -0.27 0) (end -1.27 1))
+    )
+
+    (stroke (width 0) (type solid)) (fill solid) (layer "B.Mask") (tstamp 6d11b59c-9305-4b70-b80f-10481a891c96))
+  (fp_poly
+    (pts
+      (arc (start -1.27 -1) (mid -0.27 0) (end -1.27 1))
+    )
+
+    (stroke (width 0) (type solid)) (fill solid) (layer "F.Mask") (tstamp e3d8a7c6-3c51-42e6-bc79-e9cdc5ce23b5))
+  (fp_line (start -2.285999 -1.651) (end -2.285999 1.651)
+    (stroke (width 0.1) (type default)) (layer "Dwgs.User") (tstamp 9968f3bd-dc43-4a2f-9001-9f0ff86c5b25))
+  (fp_line (start -1.27 -1) (end -1.27 1)
+    (stroke (width 0.05) (type default)) (layer "Dwgs.User") (tstamp d2e9da3d-aa9d-4d4e-ab2a-80c589352e63))
+  (fp_arc (start -2.285999 1.651) (mid -2.819857 0) (end -2.285999 -1.651)
+    (stroke (width 0.1) (type default)) (layer "Dwgs.User") (tstamp bdc94d49-2ea8-456c-a951-d0bbed87c202))
+  (fp_arc (start -1.27 -1) (mid -0.27 0) (end -1.27 1)
+    (stroke (width 0.05) (type default)) (layer "Dwgs.User") (tstamp b3b93626-961d-4a97-b832-f493fbaa0110))
+  (fp_rect (start -2.54 -1.27) (end 2.54 1.27)
+    (stroke (width 0.05) (type default)) (fill none) (layer "B.CrtYd") (tstamp 510588d9-1376-422f-83b4-874bb8fa3992))
+  (fp_circle (center 0 0) (end 3.048 0)
+    (stroke (width 0.05) (type default)) (fill none) (layer "F.CrtYd") (tstamp 10b36c62-dde3-4e7a-b196-88a071402b3e))
+  (pad "1" thru_hole oval (at -1.27 0) (size 1.3 2) (drill 1) (layers "*.Cu" "*.Mask") (tstamp 3a22d628-a1d0-4d1b-89b2-66fb118baf01))
+  (pad "2" thru_hole circle (at 1.27 0) (size 2 2) (drill 1) (layers "*.Cu" "*.Mask") (tstamp c8aa8af9-4430-40b8-8e61-8d6b20c0971c))
+  (model "../3d/PASSIVE-POL-LED-5.7MM.stp"
+    (offset (xyz 0 0 1))
+    (scale (xyz 1 1 1))
+    (rotate (xyz -90 0 90))
+  )
+)

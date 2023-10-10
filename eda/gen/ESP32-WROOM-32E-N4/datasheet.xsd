@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="datasheet">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="io-mux">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="io" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="gpio" type="xs:int" />
+                                        <xs:element name="pad-name" type="xs:string" />
+                                        <xs:element name="func-0" type="xs:string" />
+                                        <xs:element name="func-1" minOccurs="0" maxOccurs="1" type="xs:string" />
+                                        <xs:element name="func-2" type="xs:string" />
+                                        <xs:element name="func-3" minOccurs="0" maxOccurs="1" type="xs:string" />
+                                        <xs:element name="func-4" minOccurs="0" maxOccurs="1" type="xs:string" />
+                                        <xs:element name="func-5" minOccurs="0" maxOccurs="1" type="xs:string" />
+                                        <xs:element name="reset">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:string">
+                                                    <xs:enumeration value="0" />
+                                                    <xs:enumeration value="1" />
+                                                    <xs:enumeration value="2" />
+                                                    <xs:enumeration value="3" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                        <xs:element name="notes" minOccurs="0" maxOccurs="1">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:string">
+                                                    <xs:enumeration value="R" />
+                                                    <xs:enumeration value="R,I" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="rtc-mux">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="io" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="rtc-gpio-num" type="xs:int" />
+                                        <xs:element name="gpio-num" type="xs:int" />
+                                        <xs:element name="pad-name" type="xs:string" />
+                                        <xs:element name="analog-0" minOccurs="0" maxOccurs="1" type="xs:string" />
+                                        <xs:element name="analog-1" type="xs:string" />
+                                        <xs:element name="analog-2" minOccurs="0" maxOccurs="1" type="xs:string" />
+                                        <xs:element name="rtc-0" type="xs:string" />
+                                        <xs:element name="rtc-1" minOccurs="0" maxOccurs="1" type="xs:string" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="spi-pins">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="config" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="pin" minOccurs="1" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="spi" type="xs:string" />
+                                                    <xs:element name="hspi" type="xs:string" />
+                                                    <xs:element name="vspi" type="xs:string" />
+                                                </xs:sequence>
+                                                <xs:attribute name="name" type="xs:string" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="name" type="xs:string" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="bootloader">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="pull-down" type="xs:int" minOccurs="1" maxOccurs="unbounded" />
+                            <xs:element name="pull-up" type="xs:int" minOccurs="1" maxOccurs="unbounded" />
+                            <xs:element name="pwm" type="xs:int" minOccurs="1" maxOccurs="unbounded" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="module">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="no-connect" type="xs:int" minOccurs="1" maxOccurs="unbounded" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="physical">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="gpio" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute name="pin" type="xs:int" />
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
