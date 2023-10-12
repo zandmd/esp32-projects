@@ -1,0 +1,36 @@
+{
+    "configurations": [
+        {
+            "name": "pinewood-derby-car",
+            "includePath": [
+                "${workspaceFolder}/esp-idf/components/driver/rmt/include",
+                "${workspaceFolder}/esp-idf/components/esp_common/include",
+                "${workspaceFolder}/esp-idf/components/esp_hw_support/include",
+                "${workspaceFolder}/esp-idf/components/esp_system/include",
+                "${workspaceFolder}/esp-idf/components/esp_rom/include",
+                "${workspaceFolder}/esp-idf/components/freertos/config/include/freertos",
+                "${workspaceFolder}/esp-idf/components/freertos/config/xtensa/include",
+                "${workspaceFolder}/esp-idf/components/freertos/FreeRTOS-Kernel/include",
+                "${workspaceFolder}/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include",
+                "${workspaceFolder}/esp-idf/components/hal/include",
+                "${workspaceFolder}/esp-idf/components/heap/include",
+                "${workspaceFolder}/esp-idf/components/log/include",
+                "${workspaceFolder}/esp-idf/components/newlib/platform_include",
+                "${workspaceFolder}/esp-idf/components/soc/esp32/include",
+                "${workspaceFolder}/esp-idf/components/xtensa/deprecated_include",
+                "${workspaceFolder}/esp-idf/components/xtensa/esp32/include",
+                "${workspaceFolder}/esp-idf/components/xtensa/include",
+                "${workspaceFolder}/firmware/pinewood-derby-car/build/hwtest/config",
+                "${workspaceFolder}/firmware/pinewood-derby-car/hwtest/components/bsp/include",
+                "${workspaceFolder}/libraries/color/include",
+                "${workspaceFolder}/libraries/drivers/include",
+                "${workspaceFolder}/libraries/peripheral-alloc/include",
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x86",
+            "compilerPath": "${workspaceFolder}/toolchains/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc"
+        }
+    ],
+    "version": 4
+}

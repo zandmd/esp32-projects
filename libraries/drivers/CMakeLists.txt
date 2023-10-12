@@ -1,10 +1,12 @@
 idf_component_register(
     SRCS
-        src/main.cpp
+        src/ws2811.cpp
+    INCLUDE_DIRS
+        include
     REQUIRES
-        bsp
         color
-        drivers
+        driver
+        peripheral-alloc
 )
 
 component_compile_options(-std=gnu++17)

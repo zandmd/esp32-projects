@@ -4,6 +4,8 @@
 *.cmake         text eol=lf  diff        merge=text    whitespace
 *.cpp           text eol=lf  diff=cpp    merge=text    whitespace
 *.go            text eol=lf  diff=golang merge=text    whitespace
+*.hpp           text eol=lf  diff=cpp    merge=text    whitespace
+*.json          text eol=lf  diff        merge=text    whitespace
 *.kicad_mod     text eol=lf  diff        merge=text    whitespace
 *.kicad_pcb     text eol=lf  diff        merge=text    whitespace
 *.kicad_prl     text eol=lf  diff        merge=text    whitespace

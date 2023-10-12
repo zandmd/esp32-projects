@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import ctypes
+import io
 import os
 import serial.tools.list_ports
 import sys
@@ -75,5 +77,8 @@ if __name__ == "__main__":
                     print(f"Invalid selection '{data}'", file=sys.stderr)
 
         args.extend(["-p", ports[0]])
+
+    if os.name == "nt":
+        ctypes.windll.kernel32.SetConsoleMode(ctypes.windll.kernel32.GetStdHandle(-11), 7)
 
     sys.exit(subprocess.call(args))

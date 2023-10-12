@@ -1,10 +1,11 @@
 idf_component_register(
     SRCS
-        src/main.cpp
+        src/peripherals.cpp
+    INCLUDE_DIRS
+        include
     REQUIRES
-        bsp
-        color
         drivers
+        peripheral-alloc
 )
 
 component_compile_options(-std=gnu++17)
