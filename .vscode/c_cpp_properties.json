@@ -3,6 +3,7 @@
         {
             "name": "pinewood-derby-car",
             "includePath": [
+                "${workspaceFolder}/esp-idf/components/driver/gpio/include",
                 "${workspaceFolder}/esp-idf/components/driver/rmt/include",
                 "${workspaceFolder}/esp-idf/components/esp_common/include",
                 "${workspaceFolder}/esp-idf/components/esp_hw_support/include",
