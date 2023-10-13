@@ -7,6 +7,7 @@
 #include <zandmd/color/color.hpp>
 #include <zandmd/color/color_cast.hpp>
 #include <zandmd/color/hsv.hpp>
+#include <zandmd/drivers/button.hpp>
 #include <zandmd/drivers/ws2811.hpp>
 
 #define TAG "main"
@@ -16,13 +17,32 @@ using namespace zandmd::color;
 using namespace zandmd::drivers;
 
 extern "C" void app_main() {
-    assert(xTaskCreate([](void *) {
-        peripherals::button.enable();
-        while (true) {
-            peripherals::button.wait();
-            ESP_LOGI(TAG, "Button pressed");
+    peripherals::button.enable();
+    peripherals::button.callback = [](button::event ev, TickType_t time) {
+        switch (ev) {
+            case button::press:
+                ESP_LOGD(TAG, "button: press");
+                break;
+            case button::release:
+                ESP_LOGD(TAG, "button: release");
+                break;
+            case button::click:
+                ESP_LOGI(TAG, "button: click");
+                break;
+            case button::hold:
+                ESP_LOGI(TAG, "button: hold");
+                break;
+            case button::double_click:
+                ESP_LOGI(TAG, "button: double_click");
+                break;
+            case button::triple_click:
+                ESP_LOGI(TAG, "button: triple_click");
+                break;
+            default:
+                ESP_LOGW(TAG, "button: state %d", ev);
+                break;
         }
-    }, "button task", 0x1000, nullptr, 2, nullptr) == pdPASS);
+    };
     assert(xTaskCreate([](void *) {
         color<hsv, uint8_t> color(0, 255, 15);
         while (true) {
@@ -32,5 +52,5 @@ extern "C" void app_main() {
             peripherals::led.wait();
             vTaskDelay(pdMS_TO_TICKS(10));
         }
-    }, "led task", 0x1000, nullptr, 3, nullptr) == pdPASS);
+    }, "led task", 0x1000, nullptr, 2, nullptr) == pdPASS);
 }
