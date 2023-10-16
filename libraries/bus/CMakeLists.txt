@@ -1,12 +1,10 @@
 idf_component_register(
     SRCS
-        src/bus.cpp
-        src/peripherals.cpp
+        src/spi.cpp
+        src/spidev.cpp
     INCLUDE_DIRS
         include
     REQUIRES
-        bus
-        drivers
         peripheral-alloc
 )
 

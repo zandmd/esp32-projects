@@ -3,6 +3,7 @@
 #include <esp_log.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <zandmd/bsp/bus.hpp>
 #include <zandmd/bsp/peripherals.hpp>
 #include <zandmd/color/color.hpp>
 #include <zandmd/color/color_cast.hpp>
@@ -53,4 +54,7 @@ extern "C" void app_main() {
             vTaskDelay(pdMS_TO_TICKS(10));
         }
     }, "led task", 0x1000, nullptr, 2, nullptr) == pdPASS);
+    uint8_t whoami;
+    bus::imu << '\x8F' >> whoami;
+    ESP_LOGI(TAG, "IMU: 0x8F 0x%02X", whoami);
 }

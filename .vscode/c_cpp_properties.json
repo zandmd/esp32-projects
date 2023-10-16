@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/esp-idf/components/driver/gpio/include",
                 "${workspaceFolder}/esp-idf/components/driver/rmt/include",
+                "${workspaceFolder}/esp-idf/components/driver/spi/include",
                 "${workspaceFolder}/esp-idf/components/esp_common/include",
                 "${workspaceFolder}/esp-idf/components/esp_hw_support/include",
                 "${workspaceFolder}/esp-idf/components/esp_system/include",
@@ -23,6 +24,7 @@
                 "${workspaceFolder}/esp-idf/components/xtensa/include",
                 "${workspaceFolder}/firmware/pinewood-derby-car/build/hwtest/config",
                 "${workspaceFolder}/firmware/pinewood-derby-car/hwtest/components/bsp/include",
+                "${workspaceFolder}/libraries/bus/include",
                 "${workspaceFolder}/libraries/color/include",
                 "${workspaceFolder}/libraries/drivers/include",
                 "${workspaceFolder}/libraries/peripheral-alloc/include",

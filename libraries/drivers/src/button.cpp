@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdint.h>
 #include <driver/gpio.h>
 #include <esp_err.h>
 #include <freertos/FreeRTOS.h>
@@ -16,10 +17,14 @@ using namespace zandmd::drivers;
 using namespace zandmd::peripheral_alloc;
 
 button::button(generic_gpio gpio) noexcept : gpio(gpio), last_press(0), last_release(0), clicks(0) {
-    ESP_ERROR_CHECK(gpio_reset_pin(gpio));
-    ESP_ERROR_CHECK(gpio_set_direction(gpio, GPIO_MODE_INPUT));
-    ESP_ERROR_CHECK(gpio_set_pull_mode(gpio, GPIO_PULLUP_ONLY));
-    ESP_ERROR_CHECK(gpio_set_intr_type(gpio, GPIO_INTR_ANYEDGE));
+    gpio_config_t cfg = {
+        .pin_bit_mask = 1u << gpio,
+        .mode = GPIO_MODE_INPUT,
+        .pull_up_en = GPIO_PULLUP_ENABLE,
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+        .intr_type = GPIO_INTR_ANYEDGE
+    };
+    ESP_ERROR_CHECK(gpio_config(&cfg));
     timer = xTimerCreateStatic("button gesture timer", 1, false, this, &button::timer_event, &timer_memory);
     assert(timer != nullptr);
 }
