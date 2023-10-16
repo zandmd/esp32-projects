@@ -57,4 +57,9 @@ extern "C" void app_main() {
     uint8_t whoami;
     bus::imu << '\x8F' >> whoami;
     ESP_LOGI(TAG, "IMU: 0x8F 0x%02X", whoami);
+    vTaskDelay(pdMS_TO_TICKS(10 * 1000));
+    assert(peripherals::screwdriver.arm() == true);
+    ESP_LOGI(TAG, "Screwdriver on");
+    assert(peripherals::screwdriver.dump() == true);
+    ESP_LOGI(TAG, "Screwdriver off");
 }
