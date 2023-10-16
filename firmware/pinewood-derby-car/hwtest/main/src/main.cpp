@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <esp_log.h>
 #include <freertos/FreeRTOS.h>
@@ -9,6 +10,7 @@
 #include <zandmd/color/color_cast.hpp>
 #include <zandmd/color/hsv.hpp>
 #include <zandmd/drivers/button.hpp>
+#include <zandmd/drivers/lsm6dso.hpp>
 #include <zandmd/drivers/ws2811.hpp>
 
 #define TAG "main"
@@ -57,6 +59,18 @@ extern "C" void app_main() {
     uint8_t whoami;
     bus::imu << '\x8F' >> whoami;
     ESP_LOGI(TAG, "IMU: 0x8F 0x%02X", whoami);
+    static lsm6dso::sample samples[104];
+    lsm6dso::accel_fs fs = lsm6dso::accel_4_g;
+    peripherals::imu.callback = [fs](const lsm6dso::sample *samples, size_t count) {
+        for (size_t i = 0; i < count; ++i) {
+            if (samples[i].tag.sensor() == lsm6dso::sample::tag_type::accel_nc) {
+                ESP_LOGI(TAG, "IMU: %d samples: <%.3f, %.3f, %.3f> g", count, samples[i].x.accel(fs), samples[i].y.accel(fs), samples[i].z.accel(fs));
+                return;
+            }
+        }
+        ESP_LOGI(TAG, "IMU: %d samples", count);
+    };
+    peripherals::imu.enable(4, lsm6dso::odr_104_hz, fs, lsm6dso::odr_104_hz, lsm6dso::gyro_250_dps, samples, sizeof(samples) / sizeof(samples[0]));
     vTaskDelay(pdMS_TO_TICKS(10 * 1000));
     assert(peripherals::screwdriver.arm() == true);
     ESP_LOGI(TAG, "Screwdriver on");
