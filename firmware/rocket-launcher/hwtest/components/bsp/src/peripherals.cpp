@@ -5,4 +5,4 @@
 using namespace zandmd::bsp;
 using namespace zandmd::drivers;
 
-ws2811 peripherals::led(gpio::led);
+ws2811 peripherals::led(gpio::led, true);

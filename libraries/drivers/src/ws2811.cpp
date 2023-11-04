@@ -23,17 +23,17 @@ static const rmt_transmit_config_t config = {
 static const rmt_bytes_encoder_config_t bytes_config = {
     .bit0 = {
         {
-            .duration0 = 3,
+            .duration0 = 5,
             .level0 = true,
-            .duration1 = 9,
+            .duration1 = 20,
             .level1 = false
         }
     },
     .bit1 = {
         {
-            .duration0 = 9,
+            .duration0 = 12,
             .level0 = true,
-            .duration1 = 3,
+            .duration1 = 13,
             .level1 = false
         }
     },
@@ -54,7 +54,7 @@ static const rmt_symbol_word_t reset_code = {
     }
 };
 
-ws2811::ws2811(generic_gpio gpio) noexcept : state(RMT_ENCODING_RESET) {
+ws2811::ws2811(generic_gpio gpio, bool invert) noexcept : state(RMT_ENCODING_RESET) {
     rmt_encoder_t::encode = &ws2811::encode;
     rmt_encoder_t::reset = &ws2811::reset;
     rmt_encoder_t::del = &ws2811::del;
@@ -66,7 +66,7 @@ ws2811::ws2811(generic_gpio gpio) noexcept : state(RMT_ENCODING_RESET) {
         .mem_block_symbols = 64,
         .trans_queue_depth = 4,
         .flags = {
-            .invert_out = false,
+            .invert_out = invert,
             .with_dma = false,
             .io_loop_back = false,
             .io_od_mode = false
@@ -88,12 +88,12 @@ ws2811::~ws2811() noexcept {
     }
 }
 
-void ws2811::start(const color *colors, size_t size) noexcept {
-    ESP_ERROR_CHECK(rmt_transmit(chan, this, colors, sizeof(color) * size, &config));
-}
-
 void ws2811::wait() const noexcept {
     ESP_ERROR_CHECK(rmt_tx_wait_all_done(chan, portMAX_DELAY));
+}
+
+void ws2811::start(const void *colors, size_t size) noexcept {
+    ESP_ERROR_CHECK(rmt_transmit(chan, this, colors, 3 * size, &config));
 }
 
 size_t ws2811::encode(rmt_encoder_t *encoder, rmt_channel_handle_t chan, const void *data, size_t size, rmt_encode_state_t *state) noexcept {

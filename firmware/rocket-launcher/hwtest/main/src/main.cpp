@@ -17,13 +17,14 @@ using namespace zandmd::drivers;
 
 extern "C" void app_main() {
     assert(xTaskCreate([](void *) {
-        color<hsv, uint8_t> color(0, 255, 15);
+        color<hsv, uint8_t> color(0, 255, 255);
         while (true) {
             ++color.hue();
-            ws2811::color converted = color_cast<ws2811::color::format, ws2811::color::rep>(color);
+            ws2811::color_rgb converted = color_cast<ws2811::color_rgb::format, ws2811::color_rgb::rep>(color);
             peripherals::led.start(&converted, 1);
             peripherals::led.wait();
-            vTaskDelay(pdMS_TO_TICKS(10));
+            vTaskDelay(pdMS_TO_TICKS(1000));
+            ESP_LOGI(TAG,"color R:%d G:%d B%d",converted.red(),converted.green(),converted.blue());
         }
     }, "led task", 0x1000, nullptr, 3, nullptr) == pdPASS);
 }
