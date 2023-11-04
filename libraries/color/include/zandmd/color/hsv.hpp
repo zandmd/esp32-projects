@@ -26,6 +26,9 @@ namespace zandmd {
                 constexpr color(hue_type hue, saturation_type saturation, value_type value) noexcept : mem(hue, saturation, value) {
                 }
 
+                constexpr color() noexcept : mem(0, 0, 0) {
+                }
+
                 constexpr hue_type &hue() noexcept {
                     return mem.template get<0>();
                 }

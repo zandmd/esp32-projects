@@ -92,7 +92,7 @@ void ws2811::wait() const noexcept {
     ESP_ERROR_CHECK(rmt_tx_wait_all_done(chan, portMAX_DELAY));
 }
 
-void ws2811::start(const void *colors, size_t size) noexcept {
+void ws2811::start_(const void *colors, size_t size) noexcept {
     ESP_ERROR_CHECK(rmt_transmit(chan, this, colors, 3 * size, &config));
 }
 

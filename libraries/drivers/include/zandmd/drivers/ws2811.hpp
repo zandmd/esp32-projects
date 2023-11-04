@@ -34,17 +34,17 @@ namespace zandmd {
                 ~ws2811() noexcept;
 
                 inline void start(const color_rgb *colors, size_t size) noexcept {
-                    start(static_cast<const void *>(colors), size);
+                    start_(static_cast<const void *>(colors), size);
                 }
 
                 inline void start(const color_grb *colors, size_t size) noexcept {
-                    start(static_cast<const void *>(colors), size);
+                    start_(static_cast<const void *>(colors), size);
                 }
 
                 void wait() const noexcept;
 
             private:
-                void start(const void *colors, size_t size) noexcept;
+                void start_(const void *colors, size_t size) noexcept;
                 static size_t encode(rmt_encoder_t *encoder, rmt_channel_handle_t chan, const void *data, size_t size, rmt_encode_state_t *state) noexcept;
                 static esp_err_t reset(rmt_encoder_t *encoder) noexcept;
                 static esp_err_t del(rmt_encoder_t *encoder) noexcept;
