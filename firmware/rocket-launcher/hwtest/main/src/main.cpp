@@ -3,9 +3,11 @@
 #include <esp_log.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <zandmd/bsp/button.hpp>
 #include <zandmd/bsp/peripherals.hpp>
-#include <zandmd/color/color.hpp>
+#include <zandmd/bsp/tasks.hpp>
 #include <zandmd/color/color_cast.hpp>
+#include <zandmd/color/color.hpp>
 #include <zandmd/color/hsv.hpp>
 #include <zandmd/drivers/ws2811.hpp>
 
@@ -30,6 +32,9 @@ extern "C" void app_main() {
             peripherals::led.start(converted, 11);
             peripherals::led.wait();
             vTaskDelay(pdMS_TO_TICKS(10));
+
+            ESP_LOGI(TAG,"Button State: %d %d",peripherals::buttons.get_button_state(4),peripherals::buttons.get_button_state(5));
+
         }
-    }, "led task", 0x1000, nullptr, 3, nullptr) == pdPASS);
+    }, "led task", 0x1000, nullptr, tasks::ledtask, nullptr) == pdPASS);
 }

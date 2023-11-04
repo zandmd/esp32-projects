@@ -1,5 +1,6 @@
 idf_component_register(
     SRCS
+        src/button.cpp
         src/peripherals.cpp
     INCLUDE_DIRS
         include
