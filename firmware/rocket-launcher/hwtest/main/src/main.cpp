@@ -33,8 +33,11 @@ extern "C" void app_main() {
             peripherals::led.wait();
             vTaskDelay(pdMS_TO_TICKS(10));
 
-            ESP_LOGI(TAG,"Button State: %d %d",peripherals::buttons.get_button_state(4),peripherals::buttons.get_button_state(5));
 
         }
     }, "led task", 0x1000, nullptr, tasks::ledtask, nullptr) == pdPASS);
+
+    peripherals::buttons.buttonchange = [](bool state, int buttonnum){
+        ESP_LOGI(TAG,"Button Number: %d Button State %d",buttonnum,state);
+    };
 }
