@@ -3,6 +3,7 @@
 
 #include <zandmd/bsp/button.hpp>
 #include <zandmd/drivers/ws2811.hpp>
+#include <zandmd/bsp/leds.hpp>
 
 namespace zandmd {
     namespace bsp {
@@ -10,6 +11,7 @@ namespace zandmd {
             public:
                 static drivers::ws2811 led;
                 static button buttons;
+                static bsp::leds leds;
 
             private:
                 peripherals();

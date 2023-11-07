@@ -13,10 +13,6 @@ button::button() noexcept {
     xTaskCreate(&button::poll_buttons, "poll button", 0x1000, this, tasks::buttontask, NULL);
 }
 
-button::~button() noexcept {
-
-}
-
 bool button::get_button_state(int buttonnum) noexcept {
     return buttonval[buttonnum];
 }

@@ -10,7 +10,6 @@ namespace zandmd {
         class button {
             public:                
                 button() noexcept;
-                ~button() noexcept;
                 bool get_button_state(int buttonnum) noexcept;
                 std::function <void(bool state, int buttonnum)> buttonchange;
                                 
