@@ -87,6 +87,6 @@ void lsm6dso::task_func(void *context) noexcept {
         if (lsm.callback && count) {
             lsm.callback(lsm.samples, count);
         }
-        ulTaskNotifyTake(true, pdMS_TO_TICKS(1000)); // TODO: Fix interrupts
+        ulTaskNotifyTake(true, pdMS_TO_TICKS(50)); // TODO: Fix interrupts
     }
 }
