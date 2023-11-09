@@ -26,6 +26,9 @@ namespace zandmd {
                 constexpr color(red_type red, green_type green, blue_type blue) noexcept : mem(red, green, blue) {
                 }
 
+                constexpr color() noexcept : mem(0, 0, 0) {
+                }
+
                 constexpr red_type &red() noexcept {
                     return mem.template get<0>();
                 }

@@ -50,7 +50,7 @@ extern "C" void app_main() {
         color<hsv, uint8_t> color(0, 255, 15);
         while (true) {
             ++color.hue();
-            ws2811::color converted = color_cast<ws2811::color::format, ws2811::color::rep>(color);
+            ws2811::color_grb converted = color_cast<ws2811::color_grb::format, ws2811::color_grb::rep>(color);
             peripherals::led.start(&converted, 1);
             peripherals::led.wait();
             vTaskDelay(pdMS_TO_TICKS(10));
