@@ -8,6 +8,7 @@ idf_component_register(
     INCLUDE_DIRS
         include
     REQUIRES
+        bus
         color
         driver
         peripheral-alloc

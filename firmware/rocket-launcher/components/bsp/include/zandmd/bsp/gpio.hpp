@@ -1,7 +1,7 @@
 #ifndef ZANDMD_BSP_GPIO_HPP
 #define ZANDMD_BSP_GPIO_HPP
 
-#include <zandmd/peripheral-alloc/gpio.hpp>
+#include <zandmd/peripheral-alloc/gpio_map.hpp>
 
 ZANDMD_GPIO(btn_c0, 34);
 ZANDMD_GPIO(btn_c1, 35);
@@ -25,6 +25,6 @@ ZANDMD_GPIO(sense2, 2);
 ZANDMD_GPIO(sense3, 4);
 ZANDMD_GPIO(vbat, 13);
 
-#include <zandmd/peripheral-alloc/gpio.hpp>
+#include <zandmd/peripheral-alloc/gpio_map.hpp>
 
 #endif
