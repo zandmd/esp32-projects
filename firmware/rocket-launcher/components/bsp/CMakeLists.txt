@@ -1,5 +1,6 @@
 idf_component_register(
     SRCS
+        src/bus.cpp
         src/button.cpp
         src/leds.cpp
         src/peripherals.cpp

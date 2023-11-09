@@ -16,7 +16,7 @@ ZANDMD_GPIO(fire3, 17);
 ZANDMD_GPIO(led, 14);
 ZANDMD_GPIO(miso, 19);
 ZANDMD_GPIO(mosi, 23);
-ZANDMD_GPIO(rfn_irq, 15);
+ZANDMD_GPIO(rfm_irq, 15);
 ZANDMD_GPIO(rfm_rst,  22);
 ZANDMD_GPIO(sclk, 18);
 ZANDMD_GPIO(sense0, 25);

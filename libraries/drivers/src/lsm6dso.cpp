@@ -53,9 +53,11 @@ void lsm6dso::enable(UBaseType_t priority, odr accel_odr, accel_fs accel_fs, odr
     this->samples_count = samples_count;
     task = xTaskCreateStatic(&lsm6dso::task_func, "lsm6dso", sizeof(stack), this, priority, stack, &task_mem);
     assert(task != nullptr);
+    add(int1, GPIO_INTR_POSEDGE);
 }
 
 void lsm6dso::disable() noexcept {
+    remove(int1);
     samples = nullptr;
     assert(xTaskNotifyGive(task) == pdPASS);
     uint8_t ctrl[] = {
@@ -87,6 +89,6 @@ void lsm6dso::task_func(void *context) noexcept {
         if (lsm.callback && count) {
             lsm.callback(lsm.samples, count);
         }
-        ulTaskNotifyTake(true, pdMS_TO_TICKS(50)); // TODO: Fix interrupts
+        ulTaskNotifyTake(true, portMAX_DELAY);
     }
 }
