@@ -135,22 +135,10 @@ namespace zandmd {
                     return *this << half_duplex << val;
                 }
 
-                void transfer(void *buffer, const void *tx, size_t tx_size, void *rx, size_t rx_size) noexcept;
-
             private:
-                struct transfer_context {
-                    const void *tx;
-                    size_t tx_size;
-                    void *rx;
-                    size_t rx_size;
-                };
-
                 spidev(spi_device_handle_t handle) noexcept;
 
                 void transfer(void *buffer, size_t size, void (*rx_func)(const void *buffer, void *context), void (*tx_func)(void *buffer, void *context), void *context) noexcept;
-
-                static void transfer_rx(const void *buffer, void *context);
-                static void transfer_tx(void *buffer, void *context);
 
                 spi_device_handle_t handle;
         };

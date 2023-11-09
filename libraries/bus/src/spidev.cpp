@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <stddef.h>
 #include <string.h>
 #include <driver/spi_master.h>
@@ -9,21 +8,10 @@
 #define TAG "spidev"
 #define TRANSFER_LOG_LEVEL ESP_LOG_VERBOSE
 
-using namespace std;
 using namespace zandmd::bus;
 
 spidev::~spidev() noexcept {
     ESP_ERROR_CHECK(spi_bus_remove_device(handle));
-}
-
-void spidev::transfer(void *buffer, const void *tx, size_t tx_size, void *rx, size_t rx_size) noexcept {
-    transfer_context context = {
-        .tx = tx,
-        .tx_size = tx_size,
-        .rx = rx,
-        .rx_size = rx_size
-    };
-    transfer(buffer, max(tx_size, rx_size), &spidev::transfer_rx, &spidev::transfer_tx, &context);
 }
 
 spidev::spidev(spi_device_handle_t handle) noexcept : handle(handle) {
@@ -66,14 +54,4 @@ void spidev::transfer(void *buffer, size_t size, void (*rx_func)(const void *buf
         }
     }
     rx_func(rx, context);
-}
-
-void spidev::transfer_rx(const void *buffer, void *context) {
-    transfer_context &xfer = *static_cast<transfer_context *>(context);
-    memmove(xfer.rx, buffer, xfer.rx_size);
-}
-
-void spidev::transfer_tx(void *buffer, void *context) {
-    transfer_context &xfer = *static_cast<transfer_context *>(context);
-    memmove(buffer, xfer.tx, xfer.tx_size);
 }
