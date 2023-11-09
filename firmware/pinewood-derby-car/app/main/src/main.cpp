@@ -133,10 +133,10 @@ extern "C" void app_main() {
     };
     static lsm6dso::sample samples[150];
     peripherals::imu.enable(4, lsm6dso::odr_208_hz, fs, lsm6dso::odr_208_hz, lsm6dso::gyro_250_dps, samples, sizeof(samples) / sizeof(samples[0]));
-    ws2811::color off = color_cast<ws2811::color::format, ws2811::color::rep>(color<rgb, uint8_t>(0x00, 0x00, 0x00));
-    ws2811::color red = color_cast<ws2811::color::format, ws2811::color::rep>(color<rgb, uint8_t>(0xFF, 0x00, 0x00));
-    ws2811::color green = color_cast<ws2811::color::format, ws2811::color::rep>(color<rgb, uint8_t>(0x00, 0xFF, 0x00));
-    ws2811::color blue = color_cast<ws2811::color::format, ws2811::color::rep>(color<rgb, uint8_t>(0x00, 0x00, 0xFF));
+    ws2811::color_grb off = color_cast<ws2811::color_grb::format, ws2811::color_grb::rep>(color<rgb, uint8_t>(0x00, 0x00, 0x00));
+    ws2811::color_grb red = color_cast<ws2811::color_grb::format, ws2811::color_grb::rep>(color<rgb, uint8_t>(0xFF, 0x00, 0x00));
+    ws2811::color_grb green = color_cast<ws2811::color_grb::format, ws2811::color_grb::rep>(color<rgb, uint8_t>(0x00, 0xFF, 0x00));
+    ws2811::color_grb blue = color_cast<ws2811::color_grb::format, ws2811::color_grb::rep>(color<rgb, uint8_t>(0x00, 0x00, 0xFF));
     while (true) {
         switch (state) {
             case states::idle:
