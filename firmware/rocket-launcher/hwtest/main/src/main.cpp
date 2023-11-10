@@ -4,6 +4,7 @@
 #include <esp_log.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <zandmd/bsp/battery.hpp>
 #include <zandmd/bsp/button.hpp>
 #include <zandmd/bsp/charges.hpp>
 #include <zandmd/bsp/peripherals.hpp>
@@ -68,6 +69,21 @@ extern "C" void app_main() {
                 peripherals::charges.arm(charges::mask(8));
                 peripherals::charges.fire(charges::mask(8));
                 break;
+            case 'b': {
+                int raw = peripherals::battery.poll_raw();
+                battery::state state = peripherals::battery.poll();
+                switch (state) {
+                    case battery::backwards:
+                        ESP_LOGI(TAG, "Battery backwards (% 4d)", raw);
+                        break;
+                    case battery::low:
+                        ESP_LOGI(TAG, "Battery low (% 4d)", raw);
+                        break;
+                    case battery::good:
+                        ESP_LOGI(TAG, "Battery good (% 4d)", raw);
+                        break;
+                }
+             } break;
         }
         vTaskDelay(1);
     }

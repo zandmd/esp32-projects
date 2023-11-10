@@ -1,5 +1,6 @@
 idf_component_register(
     SRCS
+        src/battery.cpp
         src/bus.cpp
         src/button.cpp
         src/charges.cpp

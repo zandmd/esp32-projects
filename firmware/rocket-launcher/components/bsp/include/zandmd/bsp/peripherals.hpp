@@ -1,6 +1,7 @@
 #ifndef ZANDMD_BSP_PERIPHERALS_HPP
 #define ZANDMD_BSP_PERIPHERALS_HPP
 
+#include <zandmd/bsp/battery.hpp>
 #include <zandmd/bsp/button.hpp>
 #include <zandmd/bsp/charges.hpp>
 #include <zandmd/drivers/lora.hpp>
@@ -16,6 +17,7 @@ namespace zandmd {
                 static bsp::leds leds;
                 static drivers::lora lora;
                 static bsp::charges charges;
+                static bsp::battery battery;
 
             private:
                 peripherals();
