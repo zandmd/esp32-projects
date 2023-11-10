@@ -24,6 +24,7 @@ namespace zandmd {
                 void disable() noexcept;
 
                 void get_debug(int &rssi, float &snr) noexcept;
+                void cancel() noexcept;
 
                 template <typename Type>
                 inline lora &operator <<(const Type &obj) noexcept {
@@ -58,6 +59,7 @@ namespace zandmd {
                 SemaphoreHandle_t sem;
                 TaskHandle_t task;
                 bool enabled;
+                bool canceled;
                 uint32_t ssid;
         };
     }

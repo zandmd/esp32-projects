@@ -133,10 +133,7 @@ void lora::disable() noexcept {
     assert(enabled);
     enabled = false;
     remove(irq);
-    TaskHandle_t t = task;
-    if (t) {
-        assert(xTaskNotifyGive(t) == pdPASS);
-    }
+    cancel();
     assert(xSemaphoreTake(sem, portMAX_DELAY) == pdTRUE);
     spi << OP_MODE << OP_MODE_SLEEP;
 }
@@ -154,6 +151,14 @@ void lora::get_debug(int &rssi, float &snr) noexcept {
     snr = static_cast<float>(snr_raw) / 4.f;
 
     assert(xSemaphoreGive(sem) == pdTRUE);
+}
+
+void lora::cancel() noexcept {
+    TaskHandle_t t = task;
+    if (t) {
+        canceled = true;
+        assert(xTaskNotifyGive(t) == pdPASS);
+    }
 }
 
 uint8_t lora::send_pre(size_t size) noexcept {
@@ -198,6 +203,7 @@ uint8_t lora::recv_pre(size_t size) noexcept {
     assert(size <= MAX_PACKET_LENGTH);
     assert(xSemaphoreTake(sem, portMAX_DELAY) == pdTRUE);
     assert(enabled);
+    canceled = false;
 
     task = xTaskGetCurrentTaskHandle();
     spi << DIO_MAPPING_1 << DIO_MAPPING_1_RX_DONE_IO0;
@@ -205,7 +211,7 @@ uint8_t lora::recv_pre(size_t size) noexcept {
 
     while (true) {
         ulTaskNotifyTake(true, portMAX_DELAY);
-        if (!enabled) {
+        if (!enabled || canceled) {
             return 0xFF;
         }
 

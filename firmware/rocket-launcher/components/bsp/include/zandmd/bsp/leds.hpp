@@ -17,6 +17,7 @@ namespace zandmd {
 
                 leds() noexcept;
                 void change_leds(int num, ledstate state) noexcept;
+                void change_all(ledstate state) noexcept;
             private:
                 static void led_task(void * context) noexcept;
                 ledstate ledstates[4];

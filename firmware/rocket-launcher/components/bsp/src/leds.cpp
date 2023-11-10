@@ -23,21 +23,27 @@ void leds::change_leds( int num, ledstate state) noexcept {
     ledstates[num] = state;
 }
 
+void leds::change_all(ledstate state) noexcept {
+    for (int i = 0; i < 4; ++i) {
+        change_leds(i, state);
+    }
+}
+
 void leds::led_task (void * context) noexcept {
 
     leds* led = (leds*)context;
     ws2811::color_rgb ledcolor[11];
-    
+
     while (1) {
         for (int i =0; i < 11; i++) {
             ledcolor[i] = ws2811::color_rgb(0,0,0);
-        } 
+        }
 
         TickType_t tick = xTaskGetTickCount();
 
         for (int i = 0; i < 4; i++) {
             if (led->ledstates[i] == booting) {
-                ledcolor[i] = ws2811::color_rgb(0,0,0);  
+                ledcolor[i] = ws2811::color_rgb(0,0,0);
             }
 
             if(led->ledstates[i] == commsfail) {
@@ -46,7 +52,7 @@ void leds::led_task (void * context) noexcept {
                 }
                 else {
                     ledcolor[i] = ws2811::color_rgb(0,0,0);
-                }  
+                }
             }
 
             if(led->ledstates[i] == lowbat) {
@@ -59,7 +65,7 @@ void leds::led_task (void * context) noexcept {
                 }
                 else {
                     ledcolor[i] = ws2811::color_rgb(0,0,0);
-                }  
+                }
             }
 
             if(led->ledstates[i] == armed) {
@@ -67,11 +73,11 @@ void leds::led_task (void * context) noexcept {
             }
 
             if(led->ledstates[i] == open) {
-                ledcolor[i] = ws2811::color_rgb(255,100,0); 
+                ledcolor[i] = ws2811::color_rgb(255,100,0);
             }
 
             if(led->ledstates[i] == closed) {
-                ledcolor[i] = ws2811::color_rgb(0,255,0); 
+                ledcolor[i] = ws2811::color_rgb(0,255,0);
             }
 
         }
