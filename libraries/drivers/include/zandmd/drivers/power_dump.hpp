@@ -17,7 +17,12 @@ namespace zandmd {
                 bool disarm() noexcept;
                 bool is_armed() const noexcept;
 
-                bool dump(std::chrono::milliseconds duration = std::chrono::milliseconds(0)) noexcept;
+                inline bool dump(std::chrono::milliseconds duration = std::chrono::milliseconds(0)) noexcept {
+                    power_dump *me = this;
+                    return dump_all(&me, &me + 1, duration);
+                }
+
+                static bool dump_all(power_dump **begin, power_dump **end, std::chrono::milliseconds duration = std::chrono::milliseconds(0)) noexcept;
 
             private:
                 peripheral_alloc::generic_gpio gpio;

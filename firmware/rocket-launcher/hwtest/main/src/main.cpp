@@ -1,9 +1,11 @@
 #include <assert.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <esp_log.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <zandmd/bsp/button.hpp>
+#include <zandmd/bsp/charges.hpp>
 #include <zandmd/bsp/peripherals.hpp>
 #include <zandmd/bsp/tasks.hpp>
 #include <zandmd/color/color_cast.hpp>
@@ -43,5 +45,30 @@ extern "C" void app_main() {
             }
         }
     };
+    peripherals::charges.charge_event = [](charges::mask new_state, charges::mask old_state) {
+        ESP_LOGI(TAG, "Charges: %s -> %s", old_state.to_string().c_str(), new_state.to_string().c_str());
+    };
     peripherals::lora.enable();
+    while (true) {
+        int ch = fgetc(stdin);
+        switch (ch) {
+            case '1':
+                peripherals::charges.arm(charges::mask(1));
+                peripherals::charges.fire(charges::mask(1));
+                break;
+            case '2':
+                peripherals::charges.arm(charges::mask(2));
+                peripherals::charges.fire(charges::mask(2));
+                break;
+            case '3':
+                peripherals::charges.arm(charges::mask(4));
+                peripherals::charges.fire(charges::mask(4));
+                break;
+            case '4':
+                peripherals::charges.arm(charges::mask(8));
+                peripherals::charges.fire(charges::mask(8));
+                break;
+        }
+        vTaskDelay(1);
+    }
 }

@@ -45,17 +45,49 @@ bool power_dump::is_armed() const noexcept {
     return uxSemaphoreGetCount(semaphore) > 0;
 }
 
-bool power_dump::dump(milliseconds duration) noexcept {
-    if (!duration.count()) {
-        duration = default_duration;
-    }
-    if (disarm()) {
-        WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
-        ESP_ERROR_CHECK(gpio_set_level(gpio, true));
-        vTaskDelay(pdMS_TO_TICKS(duration.count()));
-        ESP_ERROR_CHECK(gpio_set_level(gpio, false));
-        WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 1);
+bool power_dump::dump_all(power_dump **begin, power_dump **end, milliseconds duration) noexcept {
+    if (begin == end) {
         return true;
     }
-    return false;
+    if (!duration.count()) {
+        duration = (*begin)->default_duration;
+        for (power_dump **it = begin + 1; it != end; ++it) {
+            if (duration != (*it)->default_duration) {
+                return false;
+            }
+        }
+    }
+    bool valid = true;
+    for (power_dump **it = begin; it != end; ++it) {
+        if (!(*it)->disarm()) {
+            valid = false;
+        }
+    }
+    if (!valid) {
+        return false;
+    }
+    UBaseType_t old_priority = uxTaskPriorityGet(nullptr);
+    vTaskPrioritySet(nullptr, configMAX_PRIORITIES - 1);
+    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
+    esp_err_t err = ESP_OK;
+    for (power_dump **it = begin; it != end; ++it) {
+        err = gpio_set_level((*it)->gpio, true);
+        if (err != ESP_OK) {
+            break;
+        }
+    }
+    if (err == ESP_OK) {
+        vTaskDelay(pdMS_TO_TICKS(duration.count()));
+    }
+    for (power_dump **it = begin; it != end; ++it) {
+        esp_err_t new_err = gpio_set_level((*it)->gpio, false);
+        if (new_err != ESP_OK) {
+            err = new_err;
+        }
+    }
+    vTaskDelay(1);
+    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 1);
+    ESP_ERROR_CHECK(err);
+    vTaskPrioritySet(nullptr, old_priority);
+    return true;
 }

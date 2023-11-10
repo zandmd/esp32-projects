@@ -5,6 +5,7 @@ idf_component_register(
         include
     REQUIRES
         bsp
+        hal
 )
 
 component_compile_options(-std=gnu++17)

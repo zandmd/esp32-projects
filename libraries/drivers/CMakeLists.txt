@@ -1,5 +1,6 @@
 idf_component_register(
     SRCS
+        src/adc_service.cpp
         src/button.cpp
         src/gpio_isr_service.cpp
         src/lora.cpp
@@ -12,6 +13,7 @@ idf_component_register(
         bus
         color
         driver
+        esp_adc
         peripheral-alloc
 )
 

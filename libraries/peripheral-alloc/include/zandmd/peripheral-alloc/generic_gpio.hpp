@@ -12,6 +12,10 @@ namespace zandmd {
                     return num;
                 }
 
+                constexpr operator int() const noexcept {
+                    return num;
+                }
+
             protected:
                 constexpr generic_gpio(gpio_num_t num, detail::this_should_only_be_referenced_internally &&) noexcept : num(num) {
                 }

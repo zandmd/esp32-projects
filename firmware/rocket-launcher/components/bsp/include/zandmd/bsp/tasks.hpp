@@ -6,6 +6,7 @@ namespace zandmd {
         class tasks {
             public:
                 static constexpr int buttontask = 0;
+                static constexpr int chargetask = 1;
                 static constexpr int ledtask = 3;
 
             private:

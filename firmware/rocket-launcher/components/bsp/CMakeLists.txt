@@ -2,12 +2,14 @@ idf_component_register(
     SRCS
         src/bus.cpp
         src/button.cpp
+        src/charges.cpp
         src/leds.cpp
         src/peripherals.cpp
     INCLUDE_DIRS
         include
     REQUIRES
         drivers
+        esp_adc
         peripheral-alloc
 )
 
