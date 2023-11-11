@@ -104,6 +104,8 @@ void rocket_launcher::pad_main() noexcept {
             for (int i = 0; i < 4; ++i) {
                 if (rx.charges[i] == lco_to_pad::charge_armed) {
                     peripherals::leds.change_leds(i, leds::armed);
+                } else if (rx.charges[i] == lco_to_pad::charge_fired) {
+                    peripherals::leds.change_leds(i, leds::latched);
                 } else if (tx.charges[i] == pad_to_lco::charge_continuous) {
                     peripherals::leds.change_leds(i, leds::closed);
                 } else {

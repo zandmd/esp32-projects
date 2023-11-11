@@ -39,6 +39,8 @@ void rocket_launcher::lco_main() noexcept {
     TickType_t last_packet_success = xTaskGetTickCount();
     bool ready_to_fire = true;
     bool battery_problem_logged = false;
+    charges::mask charges_fired;
+    bool was_fire_pressed = false;
     while (true) {
         // Receive the data from PAD
         pad_to_lco rx;
@@ -58,35 +60,37 @@ void rocket_launcher::lco_main() noexcept {
             lco_to_pad tx;
 
             // Check the button states
-            bool any = false;
+            charges::mask armed;
             for (int i = 0; i < 4; ++i) {
                 if (peripherals::buttons.get_button_state(i) && rx.charges[i] == pad_to_lco::charge_continuous) {
+                    if (charges_fired[i]) {
+                        tx.charges[i] = lco_to_pad::charge_fired;
+                    } else {
                     tx.charges[i] = lco_to_pad::charge_armed;
-                    any = true;
+                        armed[i] = true;
+                    }
                 } else {
                     tx.charges[i] = lco_to_pad::charge_disarmed;
+                    if (charges_fired[i] && !peripherals::buttons.get_button_state(4)) {
+                        charges_fired[i] = false;
+                    }
                 }
             }
             if (peripherals::buttons.get_button_state(4)) {
-                if (any && ready_to_fire) {
-                    vTaskDelay(1);
-                    if (peripherals::buttons.get_button_state(4)) {
+                if (armed.any() && ready_to_fire && was_fire_pressed) {
                         tx.fire = lco_to_pad::do_fire;
                         ready_to_fire = false;
-                    } else {
-                        tx.fire = lco_to_pad::dont_fire;
-                    }
+                    charges_fired |= armed;
                 } else {
                     tx.fire = lco_to_pad::dont_fire;
                 }
+                was_fire_pressed = true;
             } else {
                 tx.fire = lco_to_pad::dont_fire;
-                if (!ready_to_fire) {
-                    vTaskDelay(1);
-                    if (!peripherals::buttons.get_button_state(4)) {
+                if (!ready_to_fire && !was_fire_pressed) {
                         ready_to_fire = true;
                     }
-                }
+                was_fire_pressed = false;
             }
 
             // Send the response to PAD
@@ -115,6 +119,8 @@ void rocket_launcher::lco_main() noexcept {
                     for (int i = 0; i < 4; ++i) {
                         if (tx.charges[i] == lco_to_pad::charge_armed) {
                             peripherals::leds.change_leds(i, leds::armed);
+                        } else if (tx.charges[i] == lco_to_pad::charge_fired) {
+                            peripherals::leds.change_leds(i, leds::latched);
                         } else if (rx.charges[i] == pad_to_lco::charge_continuous) {
                             peripherals::leds.change_leds(i, leds::closed);
                         } else {

@@ -92,6 +92,10 @@ void leds::led_task (void * context) noexcept {
                 ledcolor[i] = ws2811::color_rgb(0,255,0);
             }
 
+            if (led->ledstates[i] == latched) {
+                ledcolor[i] = ws2811::color_rgb(255, 31, 0);
+            }
+
         }
 
         if (peripherals::buttons.get_button_state(5) == 0) {

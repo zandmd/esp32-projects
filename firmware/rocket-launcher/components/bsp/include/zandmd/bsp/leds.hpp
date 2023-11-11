@@ -14,8 +14,9 @@ namespace zandmd {
                     lowbat, //red fading
                     batterywrong, //fast red blink
                     armed, //rainbow
-                    open, // orange
-                    closed //green
+                    open, // yellow
+                    closed, //green
+                    latched // orange
                 };
 
                 leds() noexcept;
