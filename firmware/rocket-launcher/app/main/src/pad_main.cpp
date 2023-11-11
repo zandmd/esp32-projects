@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <esp_log.h>
+#include <esp_task_wdt.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <freertos/timers.h>
@@ -48,6 +49,7 @@ void rocket_launcher::pad_main() noexcept {
         tx.charges[2] = pad_to_lco::charge_gone;
         tx.charges[3] = pad_to_lco::charge_gone;
         while (true) {
+            ESP_ERROR_CHECK(esp_task_wdt_reset());
             peripherals::lora << tx;
             vTaskDelay(pdMS_TO_TICKS(timings::TX_PERIOD));
         }
@@ -59,6 +61,7 @@ void rocket_launcher::pad_main() noexcept {
     int tx_since_debug = 0;
     int lost_since_debug = 0;
     while (true) {
+        ESP_ERROR_CHECK(esp_task_wdt_reset());
         pad_to_lco tx;
 
         // Check battery level

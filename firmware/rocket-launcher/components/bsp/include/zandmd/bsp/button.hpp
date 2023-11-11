@@ -5,6 +5,7 @@
 #include <functional>
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
+#include <freertos/task.h>
 
 
 namespace zandmd {
@@ -13,7 +14,11 @@ namespace zandmd {
             public:
                 button() noexcept;
                 ~button() noexcept;
+
+                void enable_watchdog() noexcept;
+
                 bool get_button_state(int buttonnum) noexcept;
+
                 std::function <void(bool state, int buttonnum)> buttonchange;
 
             private:
@@ -22,6 +27,10 @@ namespace zandmd {
                 std::bitset<6> lastbuttonval;
                 StaticSemaphore_t sem_mem;
                 SemaphoreHandle_t sem;
+                StackType_t stack[4096];
+                StaticTask_t task_mem;
+                TaskHandle_t task;
+                bool watchdog;
 
         };
     }

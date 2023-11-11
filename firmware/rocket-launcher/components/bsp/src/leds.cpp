@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <esp_task_wdt.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
 #include <freertos/task.h>
@@ -17,14 +18,24 @@ using namespace zandmd::bsp;
 using namespace zandmd::color;
 using namespace zandmd::drivers;
 
-leds::leds () noexcept {
+leds::leds () noexcept : watchdog(false) {
     sem = xSemaphoreCreateRecursiveMutexStatic(&sem_mem);
     assert(sem != nullptr);
-    xTaskCreate(&leds::led_task, "leds", 0x1000, this, tasks::ledtask, NULL);
+    task = xTaskCreateStatic(&leds::led_task, "leds", sizeof(stack), this, tasks::ledtask, stack, &task_mem);
+    assert(task != nullptr);
 }
 
 leds::~leds() noexcept {
+    if (watchdog) {
+        ESP_ERROR_CHECK(esp_task_wdt_delete(task));
+    }
+    vTaskDelete(task);
     vSemaphoreDelete(sem);
+}
+
+void leds::enable_watchdog() noexcept {
+    ESP_ERROR_CHECK(esp_task_wdt_add(task));
+    watchdog = true;
 }
 
 void leds::change_leds( int num, ledstate state) noexcept {
@@ -47,6 +58,10 @@ void leds::led_task (void * context) noexcept {
     ws2811::color_rgb ledcolor[11];
 
     while (1) {
+        if (led->watchdog) {
+            ESP_ERROR_CHECK(esp_task_wdt_reset());
+        }
+
         for (int i =0; i < 11; i++) {
             ledcolor[i] = ws2811::color_rgb(0,0,0);
         }

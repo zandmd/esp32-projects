@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <esp_log.h>
+#include <esp_task_wdt.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <freertos/timers.h>
@@ -42,6 +43,8 @@ void rocket_launcher::lco_main() noexcept {
     charges::mask charges_fired;
     bool was_fire_pressed = false;
     while (true) {
+        ESP_ERROR_CHECK(esp_task_wdt_reset());
+
         // Receive the data from PAD
         pad_to_lco rx;
         TickType_t timeout = last_packet_success + timings::COMM_TIMEOUT;

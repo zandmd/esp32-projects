@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <driver/gpio.h>
 #include <esp_err.h>
+#include <esp_task_wdt.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
 #include <freertos/task.h>
@@ -11,14 +12,24 @@
 
 using namespace zandmd::bsp;
 
-button::button() noexcept {
+button::button() noexcept : watchdog(false) {
     sem = xSemaphoreCreateMutexStatic(&sem_mem);
     assert(sem != nullptr);
-    xTaskCreate(&button::poll_buttons, "poll button", 0x1000, this, tasks::buttontask, NULL);
+    task = xTaskCreateStatic(&button::poll_buttons, "poll button", sizeof(stack), this, tasks::buttontask, stack, &task_mem);
+    assert(task != nullptr);
 }
 
 button::~button() noexcept {
+    if (watchdog) {
+        ESP_ERROR_CHECK(esp_task_wdt_delete(task));
+    }
+    vTaskDelete(task);
     vSemaphoreDelete(sem);
+}
+
+void button::enable_watchdog() noexcept {
+    ESP_ERROR_CHECK(esp_task_wdt_add(task));
+    watchdog = true;
 }
 
 bool button::get_button_state(int buttonnum) noexcept {
@@ -56,6 +67,9 @@ void button::poll_buttons(void * context) noexcept {
     btn->lastbuttonval = 0;
 
     while (1) {
+        if (btn->watchdog) {
+            ESP_ERROR_CHECK(esp_task_wdt_reset());
+        }
 
         gpio_set_level(gpio::btn_r0,true);
         gpio_set_level(gpio::btn_r1,false);

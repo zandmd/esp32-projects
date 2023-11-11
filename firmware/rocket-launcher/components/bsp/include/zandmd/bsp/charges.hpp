@@ -22,6 +22,8 @@ namespace zandmd {
                 explicit charges(UBaseType_t priority, const std::array<peripheral_alloc::generic_adc, 4> &senses, const std::array<peripheral_alloc::generic_gpio, 4> &fires, std::chrono::milliseconds duration = std::chrono::milliseconds(100)) noexcept;
                 ~charges() noexcept;
 
+                void enable_watchdog() noexcept;
+
                 mask check() const noexcept;
 
                 bool arm(mask charges) noexcept;
@@ -49,6 +51,7 @@ namespace zandmd {
                 StackType_t stack[4096];
                 StaticTask_t task_mem;
                 TaskHandle_t task;
+                bool watchdog;
                 mask continuity;
         };
     }

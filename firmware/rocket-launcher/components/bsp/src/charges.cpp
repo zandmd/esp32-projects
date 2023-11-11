@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <esp_err.h>
 #include <esp_log.h>
+#include <esp_task_wdt.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
 #include <freertos/task.h>
@@ -31,7 +32,8 @@ charges::charges(UBaseType_t priority, const array<generic_adc, 4> &senses, cons
           fires(fires[0], duration),
           fires1(fires[1], duration),
           fires2(fires[2], duration),
-          fires3(fires[3], duration) {
+          fires3(fires[3], duration),
+          watchdog(false) {
     sem = xSemaphoreCreateMutexStatic(&sem_mem);
     assert(sem != nullptr);
     task = xTaskCreateStatic(&charges::task_func, "charges", sizeof(stack), this, priority, stack, &task_mem);
@@ -39,8 +41,16 @@ charges::charges(UBaseType_t priority, const array<generic_adc, 4> &senses, cons
 }
 
 charges::~charges() noexcept {
+    if (watchdog) {
+        ESP_ERROR_CHECK(esp_task_wdt_delete(task));
+    }
     vTaskDelete(task);
     vSemaphoreDelete(sem);
+}
+
+void charges::enable_watchdog() noexcept {
+    ESP_ERROR_CHECK(esp_task_wdt_add(task));
+    watchdog = true;
 }
 
 charges::mask charges::check() const noexcept {
@@ -101,6 +111,9 @@ void charges::task_func(void *context) noexcept {
     int raw[4];
     TickType_t last_print_sec = 0;
     while (true) {
+        if (crg.watchdog) {
+            ESP_ERROR_CHECK(esp_task_wdt_reset());
+        }
         mask new_state = crg.continuity;
         for (size_t i = 0; i < 4; ++i) {
             raw[i] = (&crg.senses)[i].poll();
