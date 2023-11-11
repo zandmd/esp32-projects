@@ -38,7 +38,11 @@ adc_service::~adc_service() noexcept {
 int adc_service::poll() const noexcept {
     unit &un = units[static_cast<adc_unit_t>(pin)];
     int res;
-    ESP_ERROR_CHECK(adc_oneshot_read(un.handle, pin, &res));
+    esp_err_t err = ESP_ERR_TIMEOUT;
+    for (int tries = 3; tries > 0 && err == ESP_ERR_TIMEOUT; --tries) {
+        err = adc_oneshot_read(un.handle, pin, &res);
+    }
+    ESP_ERROR_CHECK(err);
     return res;
 }
 
