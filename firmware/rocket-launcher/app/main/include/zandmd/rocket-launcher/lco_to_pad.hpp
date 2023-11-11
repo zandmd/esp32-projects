@@ -7,11 +7,14 @@ namespace zandmd {
     namespace rocket_launcher {
         struct lco_to_pad {
             enum charge_state : uint16_t {
+                charge_zero = 0,
                 charge_disarmed = 0x4E67,
-                charge_armed = 0x9BEC
+                charge_armed = 0x9BEC,
+                charge_fired = 0xDF95
             };
 
             enum fire_state : uint32_t {
+                fire_zero = 0,
                 dont_fire = 0x14E7A4DC,
                 do_fire = 0xED689596
             };
@@ -19,17 +22,7 @@ namespace zandmd {
             charge_state charges[4];
             fire_state fire;
 
-            inline bool valid() const noexcept {
-                for (int i = 0; i < 4; ++i) {
-                    if (charges[i] != charge_disarmed && charges[i] != charge_armed) {
-                        return false;
-                    }
-                }
-                if (fire != dont_fire && fire != do_fire) {
-                    return false;
-                }
-                return true;
-            }
+            bool valid() const noexcept;
         };
     }
 }

@@ -66,7 +66,7 @@ void rocket_launcher::lco_main() noexcept {
                     if (charges_fired[i]) {
                         tx.charges[i] = lco_to_pad::charge_fired;
                     } else {
-                    tx.charges[i] = lco_to_pad::charge_armed;
+                        tx.charges[i] = lco_to_pad::charge_armed;
                         armed[i] = true;
                     }
                 } else {
@@ -78,8 +78,8 @@ void rocket_launcher::lco_main() noexcept {
             }
             if (peripherals::buttons.get_button_state(4)) {
                 if (armed.any() && ready_to_fire && was_fire_pressed) {
-                        tx.fire = lco_to_pad::do_fire;
-                        ready_to_fire = false;
+                    tx.fire = lco_to_pad::do_fire;
+                    ready_to_fire = false;
                     charges_fired |= armed;
                 } else {
                     tx.fire = lco_to_pad::dont_fire;
@@ -88,8 +88,8 @@ void rocket_launcher::lco_main() noexcept {
             } else {
                 tx.fire = lco_to_pad::dont_fire;
                 if (!ready_to_fire && !was_fire_pressed) {
-                        ready_to_fire = true;
-                    }
+                    ready_to_fire = true;
+                }
                 was_fire_pressed = false;
             }
 
@@ -131,6 +131,9 @@ void rocket_launcher::lco_main() noexcept {
                         battery_problem_logged = false;
                         ESP_LOGI(TAG, "Battery restored to normal voltages");
                     }
+                    break;
+
+                default:
                     break;
             }
 
