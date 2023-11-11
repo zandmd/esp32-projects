@@ -6,6 +6,7 @@
 #include <chrono>
 #include <functional>
 #include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
 #include <freertos/task.h>
 #include <zandmd/drivers/adc_service.hpp>
 #include <zandmd/drivers/power_dump.hpp>
@@ -43,6 +44,8 @@ namespace zandmd {
                 drivers::power_dump fires1;
                 drivers::power_dump fires2;
                 drivers::power_dump fires3;
+                StaticSemaphore_t sem_mem;
+                SemaphoreHandle_t sem;
                 StackType_t stack[4096];
                 StaticTask_t task_mem;
                 TaskHandle_t task;

@@ -1,6 +1,8 @@
+#include <assert.h>
 #include <driver/gpio.h>
 #include <esp_err.h>
 #include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
 #include <freertos/task.h>
 #include <zandmd/bsp/gpio.hpp>
 #include <zandmd/bsp/tasks.hpp>
@@ -10,11 +12,20 @@
 using namespace zandmd::bsp;
 
 button::button() noexcept {
+    sem = xSemaphoreCreateMutexStatic(&sem_mem);
+    assert(sem != nullptr);
     xTaskCreate(&button::poll_buttons, "poll button", 0x1000, this, tasks::buttontask, NULL);
 }
 
+button::~button() noexcept {
+    vSemaphoreDelete(sem);
+}
+
 bool button::get_button_state(int buttonnum) noexcept {
-    return buttonval[buttonnum];
+    assert(xSemaphoreTake(sem, portMAX_DELAY) == pdTRUE);
+    bool val = lastbuttonval[buttonnum];
+    assert(xSemaphoreGive(sem) == pdTRUE);
+    return val;
 }
 
 void button::poll_buttons(void * context) noexcept {
@@ -76,7 +87,9 @@ void button::poll_buttons(void * context) noexcept {
             }
         }
 
+        assert(xSemaphoreTake(btn->sem, portMAX_DELAY) == pdTRUE);
         btn->lastbuttonval = btn->buttonval;
+        assert(xSemaphoreGive(btn->sem) == pdTRUE);
 
     }
 

@@ -5,6 +5,7 @@
 #include <esp_err.h>
 #include <esp_log.h>
 #include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
 #include <freertos/task.h>
 #include <zandmd/bsp/charges.hpp>
 #include <zandmd/drivers/power_dump.hpp>
@@ -31,15 +32,21 @@ charges::charges(UBaseType_t priority, const array<generic_adc, 4> &senses, cons
           fires1(fires[1], duration),
           fires2(fires[2], duration),
           fires3(fires[3], duration) {
+    sem = xSemaphoreCreateMutexStatic(&sem_mem);
+    assert(sem != nullptr);
     task = xTaskCreateStatic(&charges::task_func, "charges", sizeof(stack), this, priority, stack, &task_mem);
     assert(task != nullptr);
 }
 
 charges::~charges() noexcept {
     vTaskDelete(task);
+    vSemaphoreDelete(sem);
 }
 
 charges::mask charges::check() const noexcept {
+    assert(xSemaphoreTake(sem, portMAX_DELAY) == pdTRUE);
+    charges::mask continuity = this->continuity;
+    assert(xSemaphoreGive(sem) == pdTRUE);
     return continuity;
 }
 
@@ -118,7 +125,9 @@ void charges::task_func(void *context) noexcept {
         }
         if (crg.continuity != new_state) {
             mask old_state = crg.continuity;
+            assert(xSemaphoreTake(crg.sem, portMAX_DELAY) == pdTRUE);
             crg.continuity = new_state;
+            assert(xSemaphoreGive(crg.sem) == pdTRUE);
             if (crg.charge_event) {
                 crg.charge_event(new_state, old_state);
             }
