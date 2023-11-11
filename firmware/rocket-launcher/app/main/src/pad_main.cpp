@@ -56,6 +56,8 @@ void rocket_launcher::pad_main() noexcept {
     TickType_t last_tx = xTaskGetTickCount();
     TickType_t last_packet_success = last_tx;
     bool low_battery_logged = false;
+    int tx_since_debug = 0;
+    int lost_since_debug = 0;
     while (true) {
         pad_to_lco tx;
 
@@ -89,6 +91,7 @@ void rocket_launcher::pad_main() noexcept {
         assert(tx.valid());
         xTaskDelayUntil(&last_tx, timings::TX_PERIOD);
         peripherals::lora << tx;
+        ++tx_since_debug;
 
         // Receive the response from LCO
         lco_to_pad rx;
@@ -123,8 +126,23 @@ void rocket_launcher::pad_main() noexcept {
                 peripherals::charges.disarm_all();
             }
 
+            // Radio link debugging
             last_packet_success = xTaskGetTickCount();
+            if (tx_since_debug > timings::TX_PER_DEBUG) {
+                int rssi;
+                float snr;
+                peripherals::lora.get_debug(rssi, snr);
+                ESP_LOGI(TAG, "Comms stats: packet loss = %.1f %%, round trip time = %ld ms, rssi = %d, SNR = %.2f",
+                    static_cast<float>(lost_since_debug) * 100.f / static_cast<float>(tx_since_debug),
+                    pdTICKS_TO_MS(last_packet_success - last_tx),
+                    rssi,
+                    snr);
+                tx_since_debug = 0;
+                lost_since_debug = 0;
+            }
         } else {
+            ++lost_since_debug;
+
             // Check time since last packet
             TickType_t now = xTaskGetTickCount();
             if (now - last_packet_success >= timings::COMM_TIMEOUT) {
