@@ -69,6 +69,7 @@ void rocket_launcher::pad_main() noexcept {
             peripherals::leds.change_all(leds::lowbat);
             tx.battery = pad_to_lco::battery_low;
             if (!low_battery_logged) {
+                low_battery_logged = true;
                 ESP_LOGE(TAG, "Battery is low: %d", peripherals::battery.poll_raw());
             }
         }
@@ -130,7 +131,7 @@ void rocket_launcher::pad_main() noexcept {
                 int rssi;
                 float snr;
                 peripherals::lora.get_debug(rssi, snr);
-                ESP_LOGW(TAG, "Comms timeout (last RSSI = %d, SNR = %f)", rssi, snr);
+                ESP_LOGW(TAG, "Comms timeout (last RSSI = %d, SNR = %.2f)", rssi, snr);
             }
 
         }

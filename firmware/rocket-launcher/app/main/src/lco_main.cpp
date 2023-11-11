@@ -11,7 +11,7 @@
 #include <zandmd/rocket-launcher/pad_to_lco.hpp>
 #include <zandmd/rocket-launcher/timings.hpp>
 
-#define TAG "pad_main"
+#define TAG "lco_main"
 
 using namespace zandmd;
 using namespace zandmd::bsp;
@@ -138,7 +138,7 @@ void rocket_launcher::lco_main() noexcept {
                 int rssi;
                 float snr;
                 peripherals::lora.get_debug(rssi, snr);
-                ESP_LOGW(TAG, "Comms timeout (last RSSI = %d, SNR = %f)", rssi, snr);
+                ESP_LOGW(TAG, "Comms timeout (last RSSI = %d, SNR = %.2f)", rssi, snr);
             }
         }
     }
