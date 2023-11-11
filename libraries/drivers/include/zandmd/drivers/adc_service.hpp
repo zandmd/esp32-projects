@@ -25,6 +25,7 @@ namespace zandmd {
 
                 static unit units[SOC_ADC_DIGI_CONTROLLER_NUM];
                 peripheral_alloc::generic_adc pin;
+                mutable int last;
         };
     }
 }
