@@ -1,6 +1,9 @@
 #ifndef ZANDMD_BSP_LEDS_HPP
 #define ZANDMD_BSP_LEDS_HPP
 
+#include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
+
 namespace zandmd {
     namespace bsp {
         class leds {
@@ -16,11 +19,14 @@ namespace zandmd {
                 };
 
                 leds() noexcept;
+                ~leds() noexcept;
                 void change_leds(int num, ledstate state) noexcept;
                 void change_all(ledstate state) noexcept;
             private:
                 static void led_task(void * context) noexcept;
                 ledstate ledstates[4];
+                StaticSemaphore_t sem_mem;
+                SemaphoreHandle_t sem;
         };
     }
 }

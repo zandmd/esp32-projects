@@ -1,4 +1,6 @@
+#include <assert.h>
 #include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
 #include <freertos/task.h>
 #include <math.h>
 #include <string.h>
@@ -16,17 +18,27 @@ using namespace zandmd::color;
 using namespace zandmd::drivers;
 
 leds::leds () noexcept {
+    sem = xSemaphoreCreateRecursiveMutexStatic(&sem_mem);
+    assert(sem != nullptr);
     xTaskCreate(&leds::led_task, "leds", 0x1000, this, tasks::ledtask, NULL);
 }
 
+leds::~leds() noexcept {
+    vSemaphoreDelete(sem);
+}
+
 void leds::change_leds( int num, ledstate state) noexcept {
+    assert(xSemaphoreTakeRecursive(sem, portMAX_DELAY) == pdTRUE);
     ledstates[num] = state;
+    assert(xSemaphoreGiveRecursive(sem) == pdTRUE);
 }
 
 void leds::change_all(ledstate state) noexcept {
+    assert(xSemaphoreTakeRecursive(sem, portMAX_DELAY) == pdTRUE);
     for (int i = 0; i < 4; ++i) {
         change_leds(i, state);
     }
+    assert(xSemaphoreGiveRecursive(sem) == pdTRUE);
 }
 
 void leds::led_task (void * context) noexcept {
