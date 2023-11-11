@@ -16,7 +16,8 @@ namespace zandmd {
             enum charge_state : uint16_t {
                 charge_zero = 0,
                 charge_gone = 0x20DC,
-                charge_continuous = 0xDF50
+                charge_continuous = 0xDF50,
+                charge_fired = 0xE206
             };
 
             battery_state battery;

@@ -64,35 +64,41 @@ void rocket_launcher::lco_main() noexcept {
 
             // Check the button states
             charges::mask armed;
+            bool any = false;
             for (int i = 0; i < 4; ++i) {
-                if (peripherals::buttons.get_button_state(i) && rx.charges[i] == pad_to_lco::charge_continuous) {
-                    if (charges_fired[i]) {
-                        tx.charges[i] = lco_to_pad::charge_fired;
-                    } else {
-                        tx.charges[i] = lco_to_pad::charge_armed;
-                        armed[i] = true;
-                    }
+                if (rx.battery != pad_to_lco::battery_good) {
+                    tx.charges[i] = lco_to_pad::charge_disarmed;
+                } else if (rx.charges[i] == pad_to_lco::charge_fired) {
+                    ready_to_fire = false;
+                    tx.charges[i] = lco_to_pad::charge_fired;
+                } else if (charges_fired[i]) {
+                    tx.charges[i] = lco_to_pad::charge_fired;
+                } else if (peripherals::buttons.get_button_state(i) && rx.charges[i] == pad_to_lco::charge_continuous) {
+                    tx.charges[i] = lco_to_pad::charge_armed;
+                    armed[i] = true;
                 } else {
                     tx.charges[i] = lco_to_pad::charge_disarmed;
-                    if (charges_fired[i] && !peripherals::buttons.get_button_state(4)) {
-                        charges_fired[i] = false;
-                    }
+                }
+                if (peripherals::buttons.get_button_state(i)) {
+                    any = true;
                 }
             }
-            if (peripherals::buttons.get_button_state(4)) {
+            if (rx.battery != pad_to_lco::battery_good) {
+                tx.fire = lco_to_pad::dont_fire;
+            } else if (peripherals::buttons.get_button_state(4)) {
                 if (armed.any() && ready_to_fire && was_fire_pressed) {
                     tx.fire = lco_to_pad::do_fire;
-                    ready_to_fire = false;
                     charges_fired |= armed;
                 } else {
                     tx.fire = lco_to_pad::dont_fire;
                 }
                 was_fire_pressed = true;
             } else {
-                tx.fire = lco_to_pad::dont_fire;
-                if (!ready_to_fire && !was_fire_pressed) {
+                if (!ready_to_fire && !was_fire_pressed && !any) {
                     ready_to_fire = true;
+                    charges_fired = charges::mask();
                 }
+                tx.fire = lco_to_pad::dont_fire;
                 was_fire_pressed = false;
             }
 
@@ -137,6 +143,7 @@ void rocket_launcher::lco_main() noexcept {
                     break;
 
                 default:
+                    assert(false);
                     break;
             }
 

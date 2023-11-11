@@ -58,6 +58,7 @@ void rocket_launcher::pad_main() noexcept {
     TickType_t last_tx = xTaskGetTickCount();
     TickType_t last_packet_success = last_tx;
     bool low_battery_logged = false;
+    charges::mask fired;
     int tx_since_debug = 0;
     int lost_since_debug = 0;
     while (true) {
@@ -83,7 +84,9 @@ void rocket_launcher::pad_main() noexcept {
         // Check the charge states
         charges::mask charges = peripherals::charges.check();
         for (int i = 0; i < 4; ++i) {
-            if (charges[i]) {
+            if (fired[i]) {
+                tx.charges[i] = pad_to_lco::charge_fired;
+            } else if (charges[i]) {
                 tx.charges[i] = pad_to_lco::charge_continuous;
             } else {
                 tx.charges[i] = pad_to_lco::charge_gone;
@@ -101,49 +104,53 @@ void rocket_launcher::pad_main() noexcept {
         assert(xTimerStart(timer, timings::MAX_DELAY) == pdPASS);
         peripherals::lora >> rx;
         assert(xTimerStop(timer, timings::MAX_DELAY) == pdPASS);
-        if (rx.valid() && tx.battery == pad_to_lco::battery_good) {
+        if (rx.valid()) {
+            if (tx.battery == pad_to_lco::battery_good) {
 
-            // Update LEDs from LCO
-            for (int i = 0; i < 4; ++i) {
-                if (rx.charges[i] == lco_to_pad::charge_armed) {
-                    peripherals::leds.change_leds(i, leds::armed);
-                } else if (rx.charges[i] == lco_to_pad::charge_fired) {
-                    peripherals::leds.change_leds(i, leds::latched);
-                } else if (tx.charges[i] == pad_to_lco::charge_continuous) {
-                    peripherals::leds.change_leds(i, leds::closed);
+                // Update LEDs from LCO
+                for (int i = 0; i < 4; ++i) {
+                    if (rx.charges[i] == lco_to_pad::charge_armed) {
+                        peripherals::leds.change_leds(i, leds::armed);
+                    } else if (rx.charges[i] == lco_to_pad::charge_fired) {
+                        peripherals::leds.change_leds(i, leds::latched);
+                    } else if (tx.charges[i] == pad_to_lco::charge_continuous) {
+                        peripherals::leds.change_leds(i, leds::closed);
+                    } else {
+                        peripherals::leds.change_leds(i, leds::open);
+                    }
+                }
+
+                // Update arming from LCO
+                for (int i = 0; i < 4; ++i) {
+                    if (rx.charges[i] == lco_to_pad::charge_armed) {
+                        peripherals::charges.arm(charges::mask(1 << i));
+                    }
+                }
+
+                // Fire from LCO
+                if (rx.fire == lco_to_pad::do_fire && !fired.any()) {
+                    fired = peripherals::charges.are_armed();
+                    ESP_LOGI(TAG, "Fire %s", fired.to_string().c_str());
+                    peripherals::charges.fire(fired);
                 } else {
-                    peripherals::leds.change_leds(i, leds::open);
+                    fired = charges::mask();
+                    peripherals::charges.disarm_all();
                 }
-            }
 
-            // Update arming from LCO
-            for (int i = 0; i < 4; ++i) {
-                if (rx.charges[i] == lco_to_pad::charge_armed) {
-                    peripherals::charges.arm(charges::mask(1 << i));
+                // Radio link debugging
+                last_packet_success = xTaskGetTickCount();
+                if (tx_since_debug > timings::TX_PER_DEBUG) {
+                    int rssi;
+                    float snr;
+                    peripherals::lora.get_debug(rssi, snr);
+                    ESP_LOGI(TAG, "Comms stats: packet loss = %.1f %%, round trip time = %ld ms, rssi = %d, SNR = %.2f",
+                        static_cast<float>(lost_since_debug) * 100.f / static_cast<float>(tx_since_debug),
+                        pdTICKS_TO_MS(last_packet_success - last_tx),
+                        rssi,
+                        snr);
+                    tx_since_debug = 0;
+                    lost_since_debug = 0;
                 }
-            }
-
-            // Fire from LCO
-            if (rx.fire == lco_to_pad::do_fire) {
-                ESP_LOGI(TAG, "Fire %s", peripherals::charges.are_armed().to_string().c_str());
-                peripherals::charges.fire(peripherals::charges.are_armed());
-            } else {
-                peripherals::charges.disarm_all();
-            }
-
-            // Radio link debugging
-            last_packet_success = xTaskGetTickCount();
-            if (tx_since_debug > timings::TX_PER_DEBUG) {
-                int rssi;
-                float snr;
-                peripherals::lora.get_debug(rssi, snr);
-                ESP_LOGI(TAG, "Comms stats: packet loss = %.1f %%, round trip time = %ld ms, rssi = %d, SNR = %.2f",
-                    static_cast<float>(lost_since_debug) * 100.f / static_cast<float>(tx_since_debug),
-                    pdTICKS_TO_MS(last_packet_success - last_tx),
-                    rssi,
-                    snr);
-                tx_since_debug = 0;
-                lost_since_debug = 0;
             }
         } else {
             ++lost_since_debug;

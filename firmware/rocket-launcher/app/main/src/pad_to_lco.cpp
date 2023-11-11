@@ -19,7 +19,7 @@ bool pad_to_lco::valid() const noexcept {
         return false;
     }
     for (int i = 0; i < 4; ++i) {
-        if (charges[i] != charge_gone && charges[i] != charge_continuous) {
+        if (charges[i] != charge_gone && charges[i] != charge_continuous && charges[i] != charge_fired) {
             ESP_LOGW(TAG, "Unknown charge %d state 0x%04X", i, charges[i]);
             return false;
         }
