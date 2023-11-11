@@ -52,7 +52,7 @@ void button::poll_buttons(void * context) noexcept {
         vTaskDelay(1);
         btn->buttonval[0] = gpio_get_level(gpio::btn_c0);
         btn->buttonval[1] = gpio_get_level(gpio::btn_c1);
-        
+
 
         gpio_set_level(gpio::btn_r0,false);
         gpio_set_level(gpio::btn_r1,true);
@@ -68,18 +68,16 @@ void button::poll_buttons(void * context) noexcept {
         btn->buttonval[4] = gpio_get_level(gpio::btn_c0);
         btn->buttonval[5] = gpio_get_level(gpio::btn_c1);
 
-        for(int i = 0; i<6; i++) {
-
-            if (btn->lastbuttonval[i] != btn->buttonval[i]) {
-
-                btn->buttonchange(btn->buttonval[i],i);
-           
+        if (btn->buttonchange) {
+            for(int i = 0; i<6; i++) {
+                if (btn->lastbuttonval[i] != btn->buttonval[i]) {
+                    btn->buttonchange(btn->buttonval[i],i);
+                }
             }
         }
 
-
         btn->lastbuttonval = btn->buttonval;
-    
+
     }
 
 

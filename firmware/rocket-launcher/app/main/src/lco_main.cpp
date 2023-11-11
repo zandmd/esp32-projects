@@ -18,6 +18,7 @@ using namespace zandmd::bsp;
 
 void rocket_launcher::lco_main() noexcept {
     peripherals::leds.change_all(leds::booting);
+    peripherals::lora.enable();
 
     // Event handlers
     StaticTimer_t timer_mem;

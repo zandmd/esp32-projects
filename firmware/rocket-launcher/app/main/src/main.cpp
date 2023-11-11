@@ -12,7 +12,7 @@ using namespace zandmd::rocket_launcher;
 
 extern "C" void app_main() {
     // Wait for other tasks to init
-    vTaskDelay(pdMS_TO_TICKS(50));
+    vTaskDelay(pdMS_TO_TICKS(200));
 
     if (peripherals::buttons.get_button_state(5)) {
         ESP_LOGI(TAG, "Booting up in PAD mode");
