@@ -42,6 +42,7 @@ void rocket_launcher::lco_main() noexcept {
     bool battery_problem_logged = false;
     charges::mask charges_fired;
     bool was_fire_pressed = false;
+    int bad_comms_count = 0;
     while (true) {
         ESP_ERROR_CHECK(esp_task_wdt_reset());
 
@@ -145,6 +146,13 @@ void rocket_launcher::lco_main() noexcept {
                 default:
                     assert(false);
                     break;
+            }
+
+            // Check for comms failure
+            if (rx.comms == pad_to_lco::comm_bad) {
+                assert(++bad_comms_count < timings::COMM_TIMEOUT / timings::TX_PERIOD);
+            } else {
+                bad_comms_count = 0;
             }
 
             last_packet_success = xTaskGetTickCount();

@@ -61,6 +61,7 @@ void rocket_launcher::pad_main() noexcept {
     charges::mask fired;
     int tx_since_debug = 0;
     int lost_since_debug = 0;
+    bool comms_good = true;
     while (true) {
         ESP_ERROR_CHECK(esp_task_wdt_reset());
         pad_to_lco tx;
@@ -79,6 +80,13 @@ void rocket_launcher::pad_main() noexcept {
                 low_battery_logged = true;
                 ESP_LOGE(TAG, "Battery is low: %d", peripherals::battery.poll_raw());
             }
+        }
+
+        // Check comms state
+        if (comms_good) {
+            tx.comms = pad_to_lco::comm_good;
+        } else {
+            tx.comms = pad_to_lco::comm_bad;
         }
 
         // Check the charge states
@@ -152,6 +160,7 @@ void rocket_launcher::pad_main() noexcept {
                     lost_since_debug = 0;
                 }
             }
+            comms_good = true;
         } else {
             ++lost_since_debug;
 
@@ -164,6 +173,7 @@ void rocket_launcher::pad_main() noexcept {
                 float snr;
                 peripherals::lora.get_debug(rssi, snr);
                 ESP_LOGW(TAG, "Comms timeout (last RSSI = %d, SNR = %.2f)", rssi, snr);
+                comms_good = false;
             }
 
         }

@@ -5,9 +5,10 @@ namespace zandmd {
     namespace bsp {
         class tasks {
             public:
-                static constexpr int buttontask = 0;
-                static constexpr int chargetask = 1;
-                static constexpr int ledtask = 3;
+                static constexpr int ledtask = 1;
+                static constexpr int buttontask = 2;
+                static constexpr int chargetask = 3;
+                static constexpr int maintask = 4;
 
             private:
         };

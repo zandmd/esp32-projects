@@ -8,6 +8,7 @@ using namespace zandmd::rocket_launcher;
 
 static const pad_to_lco zero = {
     .battery = pad_to_lco::battery_zero,
+    .comms = pad_to_lco::comm_zero,
     .charges = { pad_to_lco::charge_zero, pad_to_lco::charge_zero, pad_to_lco::charge_zero, pad_to_lco::charge_zero }
 };
 
@@ -16,6 +17,10 @@ bool pad_to_lco::valid() const noexcept {
         if (memcmp(this, &zero, sizeof(*this))) {
             ESP_LOGW(TAG, "Unknown battery value 0x%04X", battery);
         }
+        return false;
+    }
+    if (comms != comm_good && comms != comm_bad) {
+        ESP_LOGW(TAG, "Unknown comms value 0x%04X", comms);
         return false;
     }
     for (int i = 0; i < 4; ++i) {

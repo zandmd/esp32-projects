@@ -13,6 +13,12 @@ namespace zandmd {
                 battery_backwards = 0xF2F2
             };
 
+            enum comm_state : uint16_t {
+                comm_zero = 0,
+                comm_good = 0x120F,
+                comm_bad = 0xF4CE
+            };
+
             enum charge_state : uint16_t {
                 charge_zero = 0,
                 charge_gone = 0x20DC,
@@ -21,6 +27,7 @@ namespace zandmd {
             };
 
             battery_state battery;
+            comm_state comms;
             charge_state charges[4];
 
             bool valid() const noexcept;
