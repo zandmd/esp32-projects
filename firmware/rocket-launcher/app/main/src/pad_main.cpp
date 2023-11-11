@@ -53,7 +53,8 @@ void rocket_launcher::pad_main() noexcept {
         }
     }
 
-    TickType_t last_packet_success = xTaskGetTickCount();
+    TickType_t last_tx = xTaskGetTickCount();
+    TickType_t last_packet_success = last_tx;
     bool low_battery_logged = false;
     while (true) {
         pad_to_lco tx;
@@ -86,6 +87,7 @@ void rocket_launcher::pad_main() noexcept {
 
         // Send the data to LCO
         assert(tx.valid());
+        xTaskDelayUntil(&last_tx, timings::TX_PERIOD);
         peripherals::lora << tx;
 
         // Receive the response from LCO
