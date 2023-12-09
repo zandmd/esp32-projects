@@ -1,3 +1,4 @@
+#include <chrono>
 #include <zandmd/bsp/battery.hpp>
 #include <zandmd/bsp/bus.hpp>
 #include <zandmd/bsp/button.hpp>
@@ -9,6 +10,7 @@
 #include <zandmd/drivers/ws2811.hpp>
 #include <zandmd/bsp/leds.hpp>
 
+using namespace std::chrono;
 using namespace zandmd::bsp;
 using namespace zandmd::drivers;
 
@@ -16,5 +18,5 @@ ws2811 peripherals::led(gpio::led, true);
 button peripherals::buttons;
 leds peripherals::leds;
 lora peripherals::lora(bus::rfm, gpio::rfm_rst, gpio::rfm_irq, __FILE__);
-charges peripherals::charges(tasks::chargetask, { gpio::sense0, gpio::sense1, gpio::sense2, gpio::sense3 }, { gpio::fire0, gpio::fire1, gpio::fire2, gpio::fire3 });
+charges peripherals::charges(tasks::chargetask, { gpio::sense0, gpio::sense1, gpio::sense2, gpio::sense3 }, { gpio::fire0, gpio::fire1, gpio::fire2, gpio::fire3 }, seconds(1));
 battery peripherals::battery(gpio::vbat);
