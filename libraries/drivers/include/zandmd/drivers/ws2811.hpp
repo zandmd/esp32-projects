@@ -30,7 +30,7 @@ namespace zandmd {
                 using color_rgb = zandmd::color::color<zandmd::color::rgb, detail::ws2811::rgb>;
                 using color_grb = zandmd::color::color<zandmd::color::rgb, detail::ws2811::grb>;
 
-                explicit ws2811(peripheral_alloc::generic_gpio gpio, bool invert = false) noexcept;
+                explicit ws2811(peripheral_alloc::generic_gpio gpio, bool invert = false, bool f800k = false) noexcept;
                 ~ws2811() noexcept;
 
                 inline void start(const color_rgb *colors, size_t size) noexcept {

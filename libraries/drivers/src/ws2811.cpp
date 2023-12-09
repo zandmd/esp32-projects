@@ -20,7 +20,7 @@ static const rmt_transmit_config_t config = {
     }
 };
 
-static const rmt_bytes_encoder_config_t bytes_config = {
+static const rmt_bytes_encoder_config_t bytes_config_400k = {
     .bit0 = {
         {
             .duration0 = 5,
@@ -42,6 +42,28 @@ static const rmt_bytes_encoder_config_t bytes_config = {
     }
 };
 
+static const rmt_bytes_encoder_config_t bytes_config_800k = {
+    .bit0 = {
+        {
+            .duration0 = 4,
+            .level0 = true,
+            .duration1 = 8,
+            .level1 = false
+        }
+    },
+    .bit1 = {
+        {
+            .duration0 = 8,
+            .level0 = true,
+            .duration1 = 4,
+            .level1 = false
+        }
+    },
+    .flags = {
+        .msb_first = true
+    }
+};
+
 static const rmt_copy_encoder_config_t copy_config = {
 };
 
@@ -54,7 +76,7 @@ static const rmt_symbol_word_t reset_code = {
     }
 };
 
-ws2811::ws2811(generic_gpio gpio, bool invert) noexcept : state(RMT_ENCODING_RESET) {
+ws2811::ws2811(generic_gpio gpio, bool invert, bool f800k) noexcept : state(RMT_ENCODING_RESET) {
     rmt_encoder_t::encode = &ws2811::encode;
     rmt_encoder_t::reset = &ws2811::reset;
     rmt_encoder_t::del = &ws2811::del;
@@ -74,7 +96,7 @@ ws2811::ws2811(generic_gpio gpio, bool invert) noexcept : state(RMT_ENCODING_RES
         .intr_priority = 0
     };
     ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_chan_config, &chan));
-    ESP_ERROR_CHECK(rmt_new_bytes_encoder(&bytes_config, &bytes_encoder));
+    ESP_ERROR_CHECK(rmt_new_bytes_encoder(f800k ? &bytes_config_800k : &bytes_config_400k, &bytes_encoder));
     ESP_ERROR_CHECK(rmt_new_copy_encoder(&copy_config, &copy_encoder));
     ESP_ERROR_CHECK(rmt_enable(chan));
 }
