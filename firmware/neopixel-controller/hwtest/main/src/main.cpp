@@ -13,23 +13,29 @@ using namespace zandmd::bsp;
 
 extern "C" void app_main() {
     constexpr array<leds::color, 3> colors = {
-        leds::color(63, 0, 0),
-        leds::color(0, 63, 0),
-        leds::color(0, 0, 63)
+        leds::color(255, 0, 0),
+        leds::color(0, 255, 0),
+        leds::color(191, 255, 63)
     };
-    TickType_t next_update = xTaskGetTickCount() + pdMS_TO_TICKS(1000);
-    size_t frames = 0;
+    int j = 0;
     while (true) {
-        for (const auto &color : colors) {
-            for (size_t i = 0; peripherals::lights.color_wipe(color, i); ++i) {
-                peripherals::lights.update();
-                ++frames;
-                if (xTaskGetTickCount() >= next_update) {
-                    next_update += pdMS_TO_TICKS(1000);
-                    ESP_LOGI(TAG, "Frame rate: %d FPS", frames);
-                    frames = 0;
-                }
-            }
+        int i = j++;
+        for (auto &pixel : peripherals::lights.data[7]) {
+            pixel = colors[i++ % 3];
         }
+        for (auto &pixel : peripherals::lights.data[6]) {
+            pixel = colors[i++ % 3];
+        }
+        for (i = 59; i < 107; ++i) {
+            peripherals::lights.data[7][i] = leds::color(0, 0, 0);
+        }
+        for (i = 212; i < leds::LEDS_PER_STRAND; ++i) {
+            peripherals::lights.data[7][i] = leds::color(0, 0, 0);
+        }
+        for (i = 69; i < leds::LEDS_PER_STRAND; ++i) {
+            peripherals::lights.data[6][i] = leds::color(0, 0, 0);
+        }
+        peripherals::lights.update();
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }

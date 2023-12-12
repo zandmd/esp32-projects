@@ -12,7 +12,7 @@ namespace zandmd {
                 using color = drivers::ws2811::color_rgb;
 
                 static constexpr size_t NUM_STRANDS = 8;
-                static constexpr size_t LEDS_PER_STRAND = 100;
+                static constexpr size_t LEDS_PER_STRAND = 250;
 
                 leds() noexcept;
 
