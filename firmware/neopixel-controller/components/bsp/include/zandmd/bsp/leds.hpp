@@ -1,27 +1,38 @@
 #ifndef ZANDMD_BSP_LEDS_HPP
 #define ZANDMD_BSP_LEDS_HPP
 
-#include <array>
 #include <stddef.h>
 #include <zandmd/drivers/ws2811.hpp>
+#include <zandmd/graphics/array_span.hpp>
+#include <zandmd/graphics/buffer.hpp>
+#include <zandmd/graphics/span.hpp>
 
 namespace zandmd {
     namespace bsp {
         class leds {
             public:
-                using color = drivers::ws2811::color_rgb;
-
                 static constexpr size_t NUM_STRANDS = 8;
-                static constexpr size_t LEDS_PER_STRAND = 250;
 
                 leds() noexcept;
 
                 void update() noexcept;
 
-                void off() noexcept;
-                bool color_wipe(const color &target, size_t counter) noexcept;
+            private:
+                graphics::buffer<0> buffer0;
+                graphics::buffer<0> buffer1;
+                graphics::buffer<0> buffer2;
+                graphics::buffer<0> buffer3;
+                graphics::buffer<0> buffer4;
+                graphics::buffer<0> buffer5;
+                graphics::buffer<69> buffer6;
+                graphics::buffer<212> buffer7;
 
-                std::array<std::array<color, LEDS_PER_STRAND>, NUM_STRANDS> data;
+            public:
+                graphics::span garage_gutter_l2r;
+                graphics::span porch_gutter_l2r;
+                graphics::span sidewalk_b2f;
+
+                graphics::array_span<3> all;
 
             private:
                 static constexpr size_t CONCURRENT_STRANDS = 2;

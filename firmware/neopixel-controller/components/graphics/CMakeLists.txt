@@ -1,14 +1,11 @@
 idf_component_register(
     SRCS
-        src/leds.cpp
-        src/peripherals.cpp
+        src/multi_span.cpp
     INCLUDE_DIRS
         include
     REQUIRES
         color
         drivers
-        graphics
-        peripheral-alloc
 )
 
 component_compile_options(-std=gnu++17)
