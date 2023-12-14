@@ -1,15 +1,13 @@
 idf_component_register(
     SRCS
-        src/leds.cpp
-        src/peripherals.cpp
+        src/station.cpp
     INCLUDE_DIRS
         include
     REQUIRES
-        color
         drivers
-        graphics
-        wifi
-        peripheral-alloc
+        esp_netif
+        esp_wifi
+        secrets
 )
 
 component_compile_options(-std=gnu++17)

@@ -2,10 +2,13 @@ idf_component_register(
     SRCS
         src/adc_service.cpp
         src/button.cpp
+        src/event_loop.cpp
         src/gpio_isr_service.cpp
         src/lora.cpp
         src/lsm6dso.cpp
+        src/nonvol.cpp
         src/power_dump.cpp
+        src/rtos_init.cpp
         src/ws2811.cpp
     INCLUDE_DIRS
         include
@@ -14,6 +17,8 @@ idf_component_register(
         color
         driver
         esp_adc
+        esp_event
+        nvs_flash
         peripheral-alloc
 )
 

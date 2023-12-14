@@ -2,12 +2,15 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <zandmd/bsp/peripherals.hpp>
+#include <zandmd/drivers/rtos_init.hpp>
 #include <zandmd/graphics/multi_span.hpp>
 
 using namespace zandmd::bsp;
+using namespace zandmd::drivers;
 using namespace zandmd::graphics;
 
 extern "C" void app_main() {
+    rtos_init::post_init();
     for (size_t i = 0; ; ++i) {
         peripherals::lights.all.stripe({
             multi_span::value_type(0, 0, 0),
