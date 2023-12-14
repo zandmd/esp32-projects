@@ -23,6 +23,7 @@ bool multi_span::color_wipe(const value_type &val, size_type counter) noexcept {
 }
 
 void multi_span::stripe(const initializer_list<value_type> &sequence, size_type counter) noexcept {
+    counter = sequence.size() - (counter % sequence.size());
     for (auto &el : *this) {
         el = sequence.begin()[counter++ % sequence.size()];
     }
