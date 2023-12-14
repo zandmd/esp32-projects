@@ -22,6 +22,14 @@ else()
     set(esp_idf_shell_exe_extension "")
 endif()
 
+get_filename_component(
+    esp_idf_tools_path "${esp_idf_path}/../toolchains" ABSOLUTE
+)
+set(
+    esp_idf_python
+    "${esp_idf_tools_path}/python_env/idf5.2_py3.9_env/Scripts/python${esp_idf_shell_exe_extension}"
+)
+
 function(esp_idf_project)
     set(options)
     set(single TARGET NAME)
@@ -31,15 +39,12 @@ function(esp_idf_project)
         set(idf_TARGET esp32)
     endif()
 
-    get_filename_component(
-        tools_path "${esp_idf_path}/../toolchains" ABSOLUTE
-    )
-    set(tool_dir "${tools_path}/tools/xtensa-${idf_TARGET}-elf")
+    set(tool_dir "${esp_idf_tools_path}/tools/xtensa-${idf_TARGET}-elf")
 
     if (NOT EXISTS "${tool_dir}")
         set(ENV{IDF_PATH} "${esp_idf_path}")
         set(ENV{IDF_TARGET} "${idf_TARGET}")
-        set(ENV{IDF_TOOLS_PATH} "${tools_path}")
+        set(ENV{IDF_TOOLS_PATH} "${esp_idf_tools_path}")
         execute_process(
             COMMAND "${esp_idf_shell_interpreter}" "${esp_idf_path}/install${esp_idf_shell_script_extension}" "${idf_TARGET}"
             RESULT_VARIABLE error
@@ -58,21 +63,13 @@ function(esp_idf_project)
         endif()
     endif()
 
-    set(
-        venv
-        "${tools_path}/python_env/idf5.2_py3.9_env"
-    )
-    set(
-        python
-        "${venv}/Scripts/python${esp_idf_shell_exe_extension}"
-    )
     add_custom_target(
         "${idf_NAME}" ALL
         COMMAND "${CMAKE_COMMAND}" -E env
             "IDF_PATH=${esp_idf_path}"
             "IDF_TARGET=${idf_TARGET}"
-            "IDF_TOOLS_PATH=${tools_path}"
-            "${python}"
+            "IDF_TOOLS_PATH=${esp_idf_tools_path}"
+            "${esp_idf_python}"
             "${esp_idf_path}/../cmake/FindEspIdf.py"
             -B "${CMAKE_BINARY_DIR}/${idf_NAME}"
             build
@@ -84,8 +81,8 @@ function(esp_idf_project)
         COMMAND "${CMAKE_COMMAND}" -E env
             "IDF_PATH=${esp_idf_path}"
             "IDF_TARGET=${idf_TARGET}"
-            "IDF_TOOLS_PATH=${tools_path}"
-            "${python}"
+            "IDF_TOOLS_PATH=${esp_idf_tools_path}"
+            "${esp_idf_python}"
             "${esp_idf_path}/../cmake/FindEspIdf.py"
             -B "${CMAKE_BINARY_DIR}/${idf_NAME}"
             clean
@@ -97,8 +94,8 @@ function(esp_idf_project)
         COMMAND "${CMAKE_COMMAND}" -E env
             "IDF_PATH=${esp_idf_path}"
             "IDF_TARGET=${idf_TARGET}"
-            "IDF_TOOLS_PATH=${tools_path}"
-            "${python}"
+            "IDF_TOOLS_PATH=${esp_idf_tools_path}"
+            "${esp_idf_python}"
             "${esp_idf_path}/../cmake/FindEspIdf.py"
             -B "${CMAKE_BINARY_DIR}/${idf_NAME}"
             build erase-flash flash monitor
@@ -110,8 +107,8 @@ function(esp_idf_project)
         COMMAND "${CMAKE_COMMAND}" -E env
             "IDF_PATH=${esp_idf_path}"
             "IDF_TARGET=${idf_TARGET}"
-            "IDF_TOOLS_PATH=${tools_path}"
-            "${python}"
+            "IDF_TOOLS_PATH=${esp_idf_tools_path}"
+            "${esp_idf_python}"
             "${esp_idf_path}/../cmake/FindEspIdf.py"
             -B "${CMAKE_BINARY_DIR}/${idf_NAME}"
             monitor
@@ -119,3 +116,5 @@ function(esp_idf_project)
         USES_TERMINAL
     )
 endfunction()
+
+include(UpdateVsCode)

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import ctypes
-import io
 import os
 import serial.tools.list_ports
 import sys
