@@ -10,7 +10,9 @@ using namespace zandmd::drivers;
 using namespace zandmd::graphics;
 
 extern "C" void app_main() {
-    rtos_init::post_init();
+    if (xTaskGetTickCount() > pdMS_TO_TICKS(60 * 1000)) { // Weird linker issue
+        rtos_init::post_init();
+    }
     for (size_t i = 0; ; ++i) {
         peripherals::lights.all.stripe({
             multi_span::value_type(0, 0, 0),
