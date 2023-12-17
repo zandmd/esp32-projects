@@ -13,13 +13,24 @@ extern "C" void app_main() {
     if (xTaskGetTickCount() > pdMS_TO_TICKS(60 * 1000)) { // Weird linker issue
         rtos_init::post_init();
     }
-    peripherals::lights.all.stripe({
-        multi_span::value_type(127, 0, 255),
-        multi_span::value_type(0, 0, 255),
-        multi_span::value_type(255, 127, 0),
-        multi_span::value_type(255, 0, 0),
-        multi_span::value_type(0, 255, 0),
-        multi_span::value_type(191, 255, 63)
-    }, 0);
-    peripherals::lights.update();
+    for (size_t i = 0; ; ++i) {
+        peripherals::lights.all.stripe({
+            multi_span::value_type(31, 0, 127),
+            multi_span::value_type(63, 0, 255),
+            multi_span::value_type(63, 0, 255),
+            multi_span::value_type(63, 0, 255),
+            multi_span::value_type(63, 0, 255),
+            multi_span::value_type(31, 0, 127),
+            multi_span::value_type(0, 0, 0),
+            multi_span::value_type(127, 127, 127),
+            multi_span::value_type(255, 255, 255),
+            multi_span::value_type(255, 255, 255),
+            multi_span::value_type(255, 255, 255),
+            multi_span::value_type(255, 255, 255),
+            multi_span::value_type(127, 127, 127),
+            multi_span::value_type(0, 0, 0)
+        }, i);
+        peripherals::lights.update();
+        vTaskDelay(pdMS_TO_TICKS(100));
+    }
 }
