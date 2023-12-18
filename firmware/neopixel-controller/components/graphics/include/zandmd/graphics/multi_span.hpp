@@ -170,6 +170,12 @@ namespace zandmd {
                         pointer iterator;
                 };
 
+                enum origin {
+                    start,
+                    center,
+                    finish
+                };
+
                 using iterator = generic_iterator<value_type, 1>;
                 using const_iterator = generic_iterator<const value_type, 1>;
                 using reverse_iterator = generic_iterator<value_type, -1>;
@@ -267,7 +273,7 @@ namespace zandmd {
 
                 void clear() noexcept;
                 void fill(const value_type &val) noexcept;
-                bool color_wipe(const value_type &val, size_type counter) noexcept;
+                bool color_wipe(const value_type &val, size_type counter, origin origin = start) noexcept;
                 void stripe(const std::initializer_list<value_type> &sequence, size_type counter) noexcept;
 
             protected:
