@@ -17,7 +17,6 @@ ZANDMD_GPIO(int1, 17);
 ZANDMD_GPIO(led_dim, 25);
 ZANDMD_GPIO(adc_bat, 32);
 ZANDMD_GPIO(led_ctrl, 33);
-ZANDMD_GPIO(led_dim, 34);
 ZANDMD_GPIO(btn, 36);
 
 #include <zandmd/peripheral-alloc/gpio_map.hpp>
