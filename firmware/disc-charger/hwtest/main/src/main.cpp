@@ -2,11 +2,14 @@
 #include <esp_log.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <zandmd/bsp/peripherals.hpp>
 #include <zandmd/color/color.hpp>
 #include <zandmd/color/color_cast.hpp>
 #include <zandmd/drivers/button.hpp>
+#include <zandmd/drivers/lsm6dso.hpp>
+#include <zandmd/drivers/ws2811.hpp>
 
 #define TAG "main"
 
@@ -51,4 +54,16 @@ extern "C" void app_main() {
             vTaskDelay(pdMS_TO_TICKS(10));
         }
     }, "led task", 0x1000, nullptr, 2, nullptr) == pdPASS);
+    static lsm6dso::sample samples[104];
+    lsm6dso::accel_fs fs = lsm6dso::accel_4_g;
+    peripherals::imu.callback = [fs](const lsm6dso::sample *samples, size_t count) {
+        for (size_t i = 0; i < count; ++i) {
+            if (samples[i].tag.sensor() == lsm6dso::sample::tag_type::accel_nc) {
+                ESP_LOGI(TAG, "IMU: %d samples: <%.3f, %.3f, %.3f> g", count, samples[i].x.accel(fs), samples[i].y.accel(fs), samples[i].z.accel(fs));
+                return;
+            }
+        }
+        ESP_LOGI(TAG, "IMU: %d samples", count);
+    };
+    peripherals::imu.enable(3, lsm6dso::odr_104_hz, fs, lsm6dso::odr_104_hz, lsm6dso::gyro_250_dps, samples, sizeof(samples) / sizeof(samples[0]));
 }
