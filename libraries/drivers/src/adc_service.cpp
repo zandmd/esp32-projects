@@ -5,6 +5,7 @@
 #include <hal/adc_types.h>
 #include <soc/clk_tree_defs.h>
 #include <soc/soc_caps.h>
+#include <string.h>
 #include <zandmd/drivers/adc_service.hpp>
 #include <zandmd/peripheral-alloc/generic_adc.hpp>
 
@@ -30,9 +31,17 @@ adc_service::adc_service(generic_adc pin, adc_bitwidth_t width, adc_atten_t atte
         .bitwidth = width
     };
     ESP_ERROR_CHECK(adc_oneshot_config_channel(un.handle, pin, &cfg));
+    const adc_cali_line_fitting_config_t cali_cfg = {
+        .unit_id = pin,
+        .atten = atten,
+        .bitwidth = width,
+        .default_vref = 0
+    };
+    ESP_ERROR_CHECK(adc_cali_create_scheme_line_fitting(&cali_cfg, &cali));
 }
 
 adc_service::~adc_service() noexcept {
+    ESP_ERROR_CHECK(adc_cali_delete_scheme_line_fitting(cali));
     unit &un = units[static_cast<adc_unit_t>(pin)];
     if (--un.ref_count == 0) {
         ESP_ERROR_CHECK(adc_oneshot_del_unit(un.handle));
@@ -53,6 +62,16 @@ int adc_service::poll() const noexcept {
     last = res;
     ESP_ERROR_CHECK(err);
     return res;
+}
+
+float adc_service::poll_volt() const noexcept {
+    int mV;
+    ESP_ERROR_CHECK(adc_cali_raw_to_voltage(cali, poll(), &mV));
+    return static_cast<float>(mV) / 1000.f;
+}
+
+float adc_service::poll_volt(float res_high, float res_low) const noexcept {
+    return poll_volt() * (res_low + res_high) / res_low;
 }
 
 adc_service::unit::unit() noexcept : ref_count(0) {

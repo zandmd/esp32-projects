@@ -1,6 +1,7 @@
 #ifndef ZANDMD_DRIVERS_ADC_SERVICE_HPP
 #define ZANDMD_DRIVERS_ADC_SERVICE_HPP
 
+#include <esp_adc/adc_cali.h>
 #include <esp_adc/adc_oneshot.h>
 #include <hal/adc_types.h>
 #include <soc/soc_caps.h>
@@ -14,6 +15,8 @@ namespace zandmd {
                 ~adc_service() noexcept;
 
                 int poll() const noexcept;
+                float poll_volt() const noexcept;
+                float poll_volt(float res_high, float res_low) const noexcept;
 
             private:
                 struct unit {
@@ -25,6 +28,7 @@ namespace zandmd {
 
                 static unit units[SOC_ADC_DIGI_CONTROLLER_NUM];
                 peripheral_alloc::generic_adc pin;
+                adc_cali_handle_t cali;
                 mutable int last;
         };
     }
