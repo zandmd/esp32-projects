@@ -2,6 +2,7 @@
 #define ZANDMD_BSP_PERIPHERALS_HPP
 
 #include <zandmd/bsp/analog.hpp>
+#include <zandmd/bsp/leds.hpp>
 #include <zandmd/drivers/button.hpp>
 #include <zandmd/drivers/lsm6dso.hpp>
 #include <zandmd/drivers/ws2811.hpp>
@@ -14,6 +15,7 @@ namespace zandmd {
                 static drivers::ws2811 status_led;
                 static drivers::lsm6dso imu;
                 static analog adc;
+                static leds uv;
 
             private:
                 peripherals() noexcept;
