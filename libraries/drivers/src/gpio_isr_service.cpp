@@ -11,7 +11,7 @@ unsigned gpio_isr_service::count = 0;
 
 void gpio_isr_service::add(generic_gpio gpio, gpio_int_type_t type) noexcept {
     gpio_config_t cfg = {
-        .pin_bit_mask = 1u << gpio,
+        .pin_bit_mask = 1uLL << gpio,
         .mode = GPIO_MODE_INPUT,
         .pull_up_en = GPIO_PULLUP_DISABLE,
         .pull_down_en = GPIO_PULLDOWN_DISABLE,
