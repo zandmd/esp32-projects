@@ -7,6 +7,7 @@
 #include <tuple>
 #include <type_traits>
 #include <zandmd/drivers/ws2811.hpp>
+#include <zandmd/math/random.hpp>
 
 namespace zandmd {
     namespace graphics {
@@ -275,6 +276,7 @@ namespace zandmd {
                 void fill(const value_type &val) noexcept;
                 bool color_wipe(const value_type &val, size_type counter, origin origin = start) noexcept;
                 void stripe(const std::initializer_list<value_type> &sequence, size_type counter) noexcept;
+                bool random(const value_type &val, math::random &rand) noexcept;
 
             protected:
                 constexpr multi_span(std::tuple<pointer, pointer> *first, std::tuple<pointer, pointer> *last) noexcept : first(first), last(last) {

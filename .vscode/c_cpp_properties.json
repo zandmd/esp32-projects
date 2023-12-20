@@ -105,6 +105,7 @@
                 "${workspaceFolder}/libraries/bus/include",
                 "${workspaceFolder}/libraries/color/include",
                 "${workspaceFolder}/libraries/drivers/include",
+                "${workspaceFolder}/libraries/math/include",
                 "${workspaceFolder}/libraries/peripheral-alloc/include",
                 "${workspaceFolder}/libraries/secrets/include",
                 "${workspaceFolder}/libraries/wifi/include"
@@ -217,6 +218,7 @@
                 "${workspaceFolder}/libraries/bus/include",
                 "${workspaceFolder}/libraries/color/include",
                 "${workspaceFolder}/libraries/drivers/include",
+                "${workspaceFolder}/libraries/math/include",
                 "${workspaceFolder}/libraries/peripheral-alloc/include",
                 "${workspaceFolder}/libraries/secrets/include",
                 "${workspaceFolder}/libraries/wifi/include"

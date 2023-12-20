@@ -29,6 +29,14 @@ namespace zandmd {
                 constexpr color() noexcept : mem(0, 0, 0) {
                 }
 
+                constexpr bool operator ==(const color &other) const noexcept {
+                    return red() == other.red() && green() == other.green() && blue() == other.blue();
+                }
+
+                constexpr bool operator !=(const color &other) const noexcept {
+                    return red() != other.red() || green() != other.green() || blue() != other.blue();
+                }
+
                 constexpr red_type &red() noexcept {
                     return mem.template get<0>();
                 }
