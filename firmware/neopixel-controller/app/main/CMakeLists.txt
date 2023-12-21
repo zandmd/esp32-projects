@@ -3,6 +3,7 @@ idf_component_register(
         src/main.cpp
     REQUIRES
         bsp
+        color
         drivers
         graphics
 )

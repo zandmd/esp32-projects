@@ -4,8 +4,11 @@
 #include <initializer_list>
 #include <iterator>
 #include <stddef.h>
+#include <stdint.h>
 #include <tuple>
 #include <type_traits>
+#include <zandmd/color/color.hpp>
+#include <zandmd/color/hsv.hpp>
 #include <zandmd/drivers/ws2811.hpp>
 #include <zandmd/math/random.hpp>
 
@@ -277,6 +280,7 @@ namespace zandmd {
                 bool color_wipe(const value_type &val, size_type counter, origin origin = start) noexcept;
                 void stripe(const std::initializer_list<value_type> &sequence, size_type counter) noexcept;
                 bool random(const value_type &val, math::random &rand) noexcept;
+                void rainbow(const color::color<color::hsv, uint8_t> &val, size_type counter) noexcept;
 
             protected:
                 constexpr multi_span(std::tuple<pointer, pointer> *first, std::tuple<pointer, pointer> *last) noexcept : first(first), last(last) {

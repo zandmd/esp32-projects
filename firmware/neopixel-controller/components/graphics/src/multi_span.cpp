@@ -1,9 +1,14 @@
 #include <assert.h>
 #include <initializer_list>
+#include <stdint.h>
+#include <zandmd/color/color.hpp>
+#include <zandmd/color/color_cast.hpp>
+#include <zandmd/color/hsv.hpp>
 #include <zandmd/graphics/multi_span.hpp>
 #include <zandmd/math/random.hpp>
 
 using namespace std;
+using namespace zandmd::color;
 using namespace zandmd::graphics;
 
 void multi_span::clear() noexcept {
@@ -63,4 +68,13 @@ bool multi_span::random(const value_type &val, math::random &rand) noexcept {
     }
     assert(false);
     return false;
+}
+
+void multi_span::rainbow(const color::color<hsv, uint8_t> &val, size_type counter) noexcept {
+    color::color<hsv, uint8_t> i = val;
+    i.hue() = val.hue() * counter;
+    for (auto &el : *this) {
+        i.hue() += val.hue();
+        el = color_cast<value_type::format, value_type::rep>(i);
+    }
 }
