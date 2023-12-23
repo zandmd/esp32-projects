@@ -23,7 +23,7 @@ extern "C" void app_main() {
     }
     size_t i = 0;
     while (true) {
-        peripherals::lights.all.rainbow(zandmd::color::color<hsv, uint8_t>(4, 255, 255), ++i);
+        peripherals::lights.all.rainbow_symmetric(zandmd::color::color<hsv, uint8_t>(4, 255, 255), 0, 85, 12, ++i);
         peripherals::lights.update();
         vTaskDelay(pdMS_TO_TICKS(50));
     }

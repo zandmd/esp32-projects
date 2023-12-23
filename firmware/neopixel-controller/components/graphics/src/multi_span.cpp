@@ -78,3 +78,19 @@ void multi_span::rainbow(const color::color<hsv, uint8_t> &val, size_type counte
         el = color_cast<value_type::format, value_type::rep>(i);
     }
 }
+
+void multi_span::rainbow_symmetric(const color::color<hsv, uint8_t> &val, uint8_t hue_min, uint8_t hue_max, size_type turnaround, size_type counter) noexcept {
+    size_type skew = (hue_max - hue_min) / val.hue() + 1;
+    for (auto &el : *this) {
+        counter = (counter + 1) % ((skew + turnaround) * 2);
+        if (counter < turnaround) {
+            el = color_cast<value_type::format, value_type::rep>(color::color<hsv, uint8_t>(hue_min, val.saturation(), val.value()));
+        } else if (counter < turnaround + skew) {
+            el = color_cast<value_type::format, value_type::rep>(color::color<hsv, uint8_t>(hue_min + val.hue() * (counter - turnaround), val.saturation(), val.value()));
+        } else if (counter < turnaround * 2 + skew) {
+            el = color_cast<value_type::format, value_type::rep>(color::color<hsv, uint8_t>(hue_max, val.saturation(), val.value()));
+        } else {
+            el = color_cast<value_type::format, value_type::rep>(color::color<hsv, uint8_t>(hue_max - val.hue() * (counter - (turnaround * 2 + skew)), val.saturation(), val.value()));
+        }
+    }
+}

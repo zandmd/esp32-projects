@@ -281,6 +281,7 @@ namespace zandmd {
                 void stripe(const std::initializer_list<value_type> &sequence, size_type counter) noexcept;
                 bool random(const value_type &val, math::random &rand) noexcept;
                 void rainbow(const color::color<color::hsv, uint8_t> &val, size_type counter) noexcept;
+                void rainbow_symmetric(const color::color<color::hsv, uint8_t> &val, uint8_t hue_min, uint8_t hue_max, size_type turnaround, size_type counter) noexcept;
 
             protected:
                 constexpr multi_span(std::tuple<pointer, pointer> *first, std::tuple<pointer, pointer> *last) noexcept : first(first), last(last) {
