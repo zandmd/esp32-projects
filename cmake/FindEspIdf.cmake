@@ -25,9 +25,10 @@ endif()
 get_filename_component(
     esp_idf_tools_path "${esp_idf_path}/../toolchains" ABSOLUTE
 )
+find_package(Python REQUIRED COMPONENTS Interpreter)
 set(
     esp_idf_python
-    "${esp_idf_tools_path}/python_env/idf5.2_py3.9_env/Scripts/python${esp_idf_shell_exe_extension}"
+    "${esp_idf_tools_path}/python_env/idf5.2_py${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}_env/Scripts/python${esp_idf_shell_exe_extension}"
 )
 
 function(esp_idf_project)
